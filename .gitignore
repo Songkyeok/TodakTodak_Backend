@@ -7,5 +7,7 @@
 /dataSources/
 /dataSources.local.xml
 # dependencies
+node_modules
 */node_modules
+/.idea
 package-lock.json
