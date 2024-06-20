@@ -106,4 +106,17 @@ router.post('/addGoods', function (req, res) {
     }
 })
 
+router.get('/goodsDetail/:goodsno', function(req, res, next) {
+    const goodsno = req.params.goodsno;
+
+    db.query(sql.goods_detail, [goodsno], function(error, results, fields){
+        if(error){
+            console.log(error)
+            return res.status(500).json({ error : "상품 불러오기 실패"});
+        }
+        res.json(results);
+        
+    })
+})
+
 module.exports = router;
