@@ -8,6 +8,7 @@ module.exports = {
 
 
 
+
     // admin 기능
     goods_add: `INSERT INTO tb_goods (GOODS_CATEGORY, GOODS_NM, GOODS_IMG, GOODS_CONTENT, GOODS_PRICE, GOODS_CNT) VALUES (?,?,?,?,?,?);`,
     goods_check: `SELECT goods_nm FROM tb_goods WHERE goods_nm = ?;`,
@@ -25,4 +26,9 @@ module.exports = {
                   GROUP BY od.GOODS_NO
                   ORDER BY total_orders DESC
                 ) AS t ON g.GOODS_NO = t.GOODS_NO;`
+
+    // 네이버
+    naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
+    naverJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
+
 }
