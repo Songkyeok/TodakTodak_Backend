@@ -25,7 +25,9 @@ module.exports = {
                   WHERE g.GOODS_CATEGORY IN (1, 2, 3, 4, 5, 6) 
                   GROUP BY od.GOODS_NO
                   ORDER BY total_orders DESC
-                ) AS t ON g.GOODS_NO = t.GOODS_NO;`
+                ) AS t ON g.GOODS_NO = t.GOODS_NO;`,
+    goods_detail: `SELECT goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
+    goods_all: `SELECT * FROM tb_goods;`,
 
     // 네이버
     naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
