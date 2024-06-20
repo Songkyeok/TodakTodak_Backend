@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const db = require('../db.js');
 const sql = require('../sql.js');
+const bcrypt = require('bcrypt');
 
 // 카카오 로그인
 router.post('/kakaoLogin', (req, res) => {
@@ -65,6 +66,63 @@ router.post('/naverlogin', function (request, response) {
                 }
             })
         }
+    })
+})
+
+// 회원가입
+router.post('/join', function(req, res) {
+    const user = req.body;
+    const encryptedPW = bcrypt.hashSync(user.user_pw, 10); // 비밀번호 암호화
+
+    db.query(sql.checkUser_Id, [user.user_id], function (error, results, fields) {
+        if (results.length <= 0) {
+            db.query(sql.join, [user.user_id, user.user_email, encryptedPW, user.user_nm, user.user_phone, user.user_zipcode, user.user_adr1, user.user_adr2],
+                function (error, data) {
+                    if (error) {
+                        return response.status(500).json ({
+                            message: 'DB_error'
+                        })
+                    } return response.status(200).json ({
+                        message: 'join_complete'
+                    });
+                }
+            )
+        } else {
+            return response.status(200).json ({
+                message: 'already_exist_id'
+            })
+        }
+    })
+})
+
+// 로그인
+router.post('/login', function(req, res) {
+    const loginUser = req.body;
+
+    db.query(sql.id_check, [loginUser.user_id], function(error, results, fields) {
+        if (results.length <= 0) {
+            return response.status(200).json ({
+                message: 'undefined_id'
+            })
+        } else {
+            db.query(sql.login, [loginUser.user_id], function (error, results, fields) {
+                const same = bcrypt.compareSync(loginUser.user_pw, results[0].user_pw);
+
+                if (same) {
+                    // ID에 저장된 pw 값과 입력한 pw의 값이 동일한 경우
+                    db.query(sql.get_user_no, [loginUser.user_id], function (error, results, fields) {
+                        return response.status(200).json ({
+                            message: results[0].user_no
+                        })
+                    })
+                } else {
+                    // 비밀번호 불일치
+                    return response.status(200).json ({
+                        message: 'incorrect_pw'
+                    })
+                }
+            })
+        } 
     })
 })
 
