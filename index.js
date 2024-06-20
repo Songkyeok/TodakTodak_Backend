@@ -20,7 +20,9 @@ app.use(express.urlencoded({
 }));
 
 const authRouter = require('./routes/auth');
+const goodsRouter = require('./routes/goods');
 app.use('/auth', authRouter);
+app.use('/goods', goodsRouter);
 
 app.listen(3000, function() {
     console.log('Server Running at http://localhost:3000');
