@@ -27,8 +27,6 @@ module.exports = {
                   ORDER BY total_orders DESC
 
                 ) AS t ON g.GOODS_NO = t.GOODS_NO`,
-
-                ) AS t ON g.GOODS_NO = t.GOODS_NO;`,
     goods_detail: `SELECT goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
     goods_all: `SELECT * FROM tb_goods;`,
 
@@ -39,7 +37,7 @@ module.exports = {
 
     
     // 메인 페이지
-    bestGoodsList: `SELECT goods_img, goods_nm, goods_price FROM tb_goods`
+    bestGoodsList: `SELECT goods_img, goods_nm, goods_price FROM tb_goods`,
 
 
     // 로컬 회원가입
@@ -47,4 +45,5 @@ module.exports = {
     id_check: `SELECT * FROM tb_user WHERE user_id = ?`,
     login: `SELECT user_pw FROM tb_user WHERE user_id = ?`,
 
+    id_check2: `select user_id From TB_USER where user_id = ?`,
 }
