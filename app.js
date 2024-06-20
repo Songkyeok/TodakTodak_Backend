@@ -21,10 +21,12 @@ app.use(express.urlencoded({
 
 const auth = require('./routes/auth');
 const goods = require('./routes/goods');
+const main = require('./routes/main');
 
 
 app.use('/auth', auth);
 app.use('/goods', goods);
+app.use('/main', main);
 
 app.listen(3000, function() {
     console.log('Server Running at http://localhost:3000');
