@@ -106,16 +106,36 @@ router.post('/addGoods', function (req, res) {
     }
 })
 
+//상품 디테일
 router.get('/goodsDetail/:goodsno', function(req, res, next) {
     const goodsno = req.params.goodsno;
-
+    console.log(goodsno);
     db.query(sql.goods_detail, [goodsno], function(error, results, fields){
         if(error){
             console.log(error)
             return res.status(500).json({ error : "상품 불러오기 실패"});
         }
+        console.log(results);
         res.json(results);
         
+    })
+})
+
+router.get('/newGoodsList', (req, res) => {
+    db.query(sql.newGoodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+
+router.get('/bestGoodsList', (req, res) => {
+    db.query(sql.newGoodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
     })
 })
 
