@@ -29,10 +29,6 @@ module.exports = {
                 ) AS t ON g.GOODS_NO = t.GOODS_NO;`,
     goods_detail: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
 
-
-                ) AS t ON g.GOODS_NO = t.GOODS_NO`,
-    goods_detail: `SELECT goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
-
     goods_all: `SELECT * FROM tb_goods;`,
     bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
