@@ -25,14 +25,33 @@ module.exports = {
                   WHERE g.GOODS_CATEGORY IN (1, 2, 3, 4, 5, 6) 
                   GROUP BY od.GOODS_NO
                   ORDER BY total_orders DESC
+
                 ) AS t ON g.GOODS_NO = t.GOODS_NO;`,
     goods_detail: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
+
+
+                ) AS t ON g.GOODS_NO = t.GOODS_NO`,
+    goods_detail: `SELECT goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
+
     goods_all: `SELECT * FROM tb_goods;`,
     bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+
 
     // 네이버
     naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
     naverJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
 
+    
+    // 메인 페이지
+    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+
+
+    // 로컬 회원가입
+    join: `INSERT INTO tb_user (user_id, user_nm, user_email, user_pw, user_phone, user_zipcode, user_adr1, user_adr2) VALUES(?,?,?,?,?,?,?,?)`,
+    id_check: `SELECT * FROM tb_user WHERE user_id = ?`,
+    login: `SELECT user_pw FROM tb_user WHERE user_id = ?`,
+
+    id_check2: `select user_id From TB_USER where user_id = ?`,
 }

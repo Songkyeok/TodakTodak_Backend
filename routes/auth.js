@@ -69,12 +69,32 @@ router.post('/naverlogin', function (request, response) {
     })
 })
 
+// 아이디 중복 확인
+router.post('/checkUserId', (req, res) => {
+    const inputValue = req.body.user_id;
+
+    // get : url에 파라미터로 등록되는데 -> 가져오는 법은 찾아봐야 됨.
+    // post : req.body에 front에서 요청한 값이 전달 됨.
+
+    console.log("temp====>", inputValue);
+    
+    db.query(sql.id_check2, [inputValue], (error, results) => {
+        if(error) {
+            return res.status(500).json({ error: 'error '});
+        }
+
+        res.json(results);
+        console.log(results)
+
+    })
+})
+
 // 회원가입
 router.post('/join', function(req, res) {
     const user = req.body;
     const encryptedPW = bcrypt.hashSync(user.user_pw, 10); // 비밀번호 암호화
 
-    db.query(sql.checkUser_Id, [user.user_id], function (error, results, fields) {
+    db.query(sql.checkUserId, [user.user_id], function (error, results, fields) {
         if (results.length <= 0) {
             db.query(sql.join, [user.user_id, user.user_email, encryptedPW, user.user_nm, user.user_phone, user.user_zipcode, user.user_adr1, user.user_adr2],
                 function (error, data) {
