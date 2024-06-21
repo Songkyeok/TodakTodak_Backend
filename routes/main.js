@@ -12,6 +12,17 @@ router.get('/bestGoodsList', (req,res) => {
         console.log("results ===>>", results);
         res.json(results);
     })
+}),
+router.get('/newGoodsList', (req,res) => {
+    db.query(sql.newGoodsList, (error, results) => {
+        if(error){
+            console.log(error);
+            return res.status(500).json({ error: 'error'});
+        }
+        console.log("results ===>>", results);
+        res.json(results);
+    })
 })
+
 
 module.exports = router;

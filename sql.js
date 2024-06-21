@@ -37,7 +37,8 @@ module.exports = {
 
     
     // 메인 페이지
-    bestGoodsList: `SELECT goods_img, goods_nm, goods_price FROM tb_goods`,
+    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
 
 
     // 로컬 회원가입
