@@ -54,4 +54,7 @@ module.exports = {
     login: `SELECT user_pw FROM tb_user WHERE user_id = ?`,
 
     id_check2: `select user_id From TB_USER where user_id = ?`,
+
+    // 상품 리스트
+    productList: `select goods_no, goods_category, goods_nm, goods_img, goods_price from tb_goods`
 }
