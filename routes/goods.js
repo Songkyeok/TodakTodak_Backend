@@ -139,4 +139,65 @@ router.get('/bestGoodsList', (req, res) => {
     })
 })
 
+// 카테고리별 상품리스트
+router.get('/tableGoodsList', (req, res) => {
+    db.query(sql.goodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+router.get('/toyGoodsList', (req, res) => {
+    db.query(sql.goodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+router.get('/bathGoodsList', (req, res) => {
+    db.query(sql.goodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+router.get('/cleanGoodsList', (req, res) => {
+    db.query(sql.goodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+router.get('/outGoodsList', (req, res) => {
+    db.query(sql.goodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+router.get('/babyGoodsList', (req, res) => {
+    db.query(sql.goodsList, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+
+// 카테고리 조회
+router.get('/categories/:categotyId/goods', (req, res) => {
+    db.query(categoryGoods, [categoryId], (err, results) => {
+        if(err) {
+            console.log(err);
+            return res.status(500).json({ error });
+        }
+        res.json(results);
+    });
+});
+
 module.exports = router;
