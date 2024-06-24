@@ -3,6 +3,39 @@ const db = require('../db.js');
 const sql = require('../sql.js');
 const bcrypt = require('bcrypt');
 
+
+// 로컬 로그인
+router.post('/login', (req, res) => {
+    const loginUser = req.body;
+
+    db.query(sql.id_check, [loginUser.user_id], (err, results) => {
+        if(results.length <= 0) {
+            res.status(200).json({
+                message: "undefined_id"
+            })
+        } else {
+            db.query(sql.login, [loginUser.user_id], (err, results) => {
+                const comparePw = bcrypt.compareSync(loginUser.user_pw, results[0].user_pw);
+
+                // DB의 패스워드와 입력 값이 동일한 경우
+                if (comparePw) {
+                    db.query(sql.getUserNo, [loginUser.user_id], (err, results) => {
+                        res.status(200).json({
+                            message: results[0].user_no
+                        })
+                    })
+                } else {
+                    // 비밀번호 틀린 경우
+                    res.status(200).json ({
+                        message: 'incorrect_pw'
+                    })
+                }
+            })
+            
+        }
+    })
+})
+
 // 카카오 로그인
 router.post('/kakaoLogin', (req, res) => {
     const kakao = req.body;
@@ -72,77 +105,29 @@ router.post('/naverlogin', function (request, response) {
 // 아이디 중복 확인
 router.post('/checkUserId', (req, res) => {
     const inputValue = req.body.user_id;
-
-    // get : url에 파라미터로 등록되는데 -> 가져오는 법은 찾아봐야 됨.
-    // post : req.body에 front에서 요청한 값이 전달 됨.
-
-    console.log("temp====>", inputValue);
     
-    db.query(sql.id_check2, [inputValue], (error, results) => {
+    db.query(sql.id_check, [inputValue], (error, results) => {
         if(error) {
             return res.status(500).json({ error: 'error '});
         }
-
         res.json(results);
-        console.log(results)
-
     })
 })
 
 // 회원가입
-router.post('/join', function(req, res) {
-    const user = req.body;
-    const encryptedPW = bcrypt.hashSync(user.user_pw, 10); // 비밀번호 암호화
+router.post("/join", (req, res) => {
+    const localLogin = req.body;
 
-    db.query(sql.checkUserId, [user.user_id], function (error, results, fields) {
-        if (results.length <= 0) {
-            db.query(sql.join, [user.user_id, user.user_email, encryptedPW, user.user_nm, user.user_phone, user.user_zipcode, user.user_adr1, user.user_adr2],
-                function (error, data) {
-                    if (error) {
-                        return response.status(500).json ({
-                            message: 'DB_error'
-                        })
-                    } return response.status(200).json ({
-                        message: 'join_complete'
-                    });
-                }
-            )
+    // hashSync
+    const encryptedPW = bcrypt.hashSync(localLogin.user_pw, 10);
+    
+    db.query(sql.join, [localLogin.user_id, localLogin.user_nm, localLogin.user_email, encryptedPW, localLogin.user_phone, localLogin.user_zipcode, localLogin.user_adr1, localLogin.user_adr2], (err, data) => {
+        if(err) {
+            res.status(500).json({ error: 'error' });
+            console.log(err);
         } else {
-            return response.status(200).json ({
-                message: 'already_exist_id'
-            })
+            res.json(data);
         }
-    })
-})
-
-// 로그인
-router.post('/login', function(req, res) {
-    const loginUser = req.body;
-
-    db.query(sql.id_check, [loginUser.user_id], function(error, results, fields) {
-        if (results.length <= 0) {
-            return response.status(200).json ({
-                message: 'undefined_id'
-            })
-        } else {
-            db.query(sql.login, [loginUser.user_id], function (error, results, fields) {
-                const same = bcrypt.compareSync(loginUser.user_pw, results[0].user_pw);
-
-                if (same) {
-                    // ID에 저장된 pw 값과 입력한 pw의 값이 동일한 경우
-                    db.query(sql.get_user_no, [loginUser.user_id], function (error, results, fields) {
-                        return response.status(200).json ({
-                            message: results[0].user_no
-                        })
-                    })
-                } else {
-                    // 비밀번호 불일치
-                    return response.status(200).json ({
-                        message: 'incorrect_pw'
-                    })
-                }
-            })
-        } 
     })
 })
 

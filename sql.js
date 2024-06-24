@@ -6,9 +6,6 @@ module.exports = {
     kakaoLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
     kakaoJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
 
-
-
-
     // admin 기능
     goods_add: `INSERT INTO tb_goods (GOODS_CATEGORY, GOODS_NM, GOODS_IMG, GOODS_CONTENT, GOODS_PRICE, GOODS_CNT) VALUES (?,?,?,?,?,?);`,
     goods_check: `SELECT goods_nm FROM tb_goods WHERE goods_nm = ?;`,
@@ -46,10 +43,11 @@ module.exports = {
 
     // 로컬 회원가입
     join: `INSERT INTO tb_user (user_id, user_nm, user_email, user_pw, user_phone, user_zipcode, user_adr1, user_adr2) VALUES(?,?,?,?,?,?,?,?)`,
-    id_check: `SELECT * FROM tb_user WHERE user_id = ?`,
+    id_check: `select user_id From TB_USER where user_id = ?`,
+    
+    // 로컬 로그인
     login: `SELECT user_pw FROM tb_user WHERE user_id = ?`,
 
-    id_check2: `select user_id From TB_USER where user_id = ?`,
 
     // 카테고리별 상품 리스트
     goodsList: `select goods_no, goods_nm, goods_img, goods_price from tb_goods WHERE goods_category = ?`,
