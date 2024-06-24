@@ -51,4 +51,13 @@ module.exports = {
 
     // 카테고리별 상품 리스트
     goodsList: `select goods_no, goods_nm, goods_img, goods_price from tb_goods WHERE goods_category = ?`,
+
+    // 이벤트 리스트
+    eventList: `select goods_no, goods_nm, goods_img, goods_price from tb_goods`,
+
+    // 장바구니 목록 상품이름
+    basketName: `select goods_nm from tb_basket`,
+
+    // 장바구니
+    basketList: `select b.* from tb_basket as b join tb_user as u on b.user_no = u.user_no`
 }
