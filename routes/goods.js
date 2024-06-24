@@ -140,8 +140,10 @@ router.get('/bestGoodsList', (req, res) => {
 })
 
 // 카테고리별 상품리스트
-router.get('/tableGoodsList', (req, res) => {
-    db.query(sql.goodsList, (error, results) => {
+router.get('/tableGoodsList/:goods_category', (req, res) => {
+    const category = req.params.goods_category;
+    
+    db.query(sql.goodsList, [category], (error, results) => {
         if(error){
             return res.status(500).json({error: 'error'});
         }
@@ -199,5 +201,7 @@ router.get('/categories/:categotyId/goods', (req, res) => {
         res.json(results);
     });
 });
+
+
 
 module.exports = router;
