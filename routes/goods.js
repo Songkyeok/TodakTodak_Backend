@@ -109,13 +109,12 @@ router.post('/addGoods', function (req, res) {
 //상품 디테일
 router.get('/goodsDetail/:goodsno', function(req, res, next) {
     const goodsno = req.params.goodsno;
-    console.log(goodsno);
     db.query(sql.goods_detail, [goodsno], function(error, results, fields){
         if(error){
             console.log(error)
             return res.status(500).json({ error : "상품 불러오기 실패"});
         }
-        console.log(results);
+        
         res.json(results);
         
     })
@@ -201,6 +200,40 @@ router.get('/categories/:categotyId/goods', (req, res) => {
         res.json(results);
     });
 });
+
+//장바구니 담기
+router.post('/basketInsert', (req, res, next) => {
+    const basket = req.body;
+    db.query(sql.basket_add, [basket.goods_no, basket.user_no, basket.basket_img, basket.basket_nm, basket.basket_price, basket.basket_cnt], function(err, data) {
+        if(err){
+            return res.status(200).json({ message: '실패' });
+        }
+        return res.json(data);
+    })
+})
+
+router.post('/likeInsert', (req, res, next) => {
+    const like = req.body;
+    console.log(like)
+
+    db.query(sql.like_check, [like.user_no, like.goods_no], function (err, results, fields){
+        if(error){
+            return res.status(500).json({error: '좋아요 체크 에러'})
+        }
+
+        if(results.length > 0) {
+            return res.status(200).json({ message: '좋아요 성공', isLiked: true });
+        }else{
+
+            db.query(sql.like_add, [like.user_no, like.goods_no], function(err, results, fields){
+                if(err){
+                    return res.status(200).json({ message: '찜 누르기 실패'});
+                }
+                return res.json(results);
+            })
+        }
+    })
+})
 
 
 
