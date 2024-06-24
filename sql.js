@@ -51,7 +51,4 @@ module.exports = {
 
     // 카테고리별 상품 리스트
     goodsList: `select goods_no, goods_nm, goods_img, goods_price from tb_goods WHERE goods_category = ?`,
-
-    // 카테고리 상품조회
-    categoryGoods: `select goods_no, goods_nm, goods_img, goods_price * FROM tb_goods WHERE category_id = ?`
 }
