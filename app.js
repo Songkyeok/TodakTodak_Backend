@@ -28,12 +28,13 @@ app.use(express.urlencoded({
 
 const auth = require('./routes/auth');
 const goods = require('./routes/goods');
-
+const profile = require('./routes/profile');
 
 
 
 app.use('/auth', auth);
 app.use('/goods', goods);
+app.use('/profile', profile);
 
 
 

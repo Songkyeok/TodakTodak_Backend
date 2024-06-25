@@ -70,5 +70,11 @@ module.exports = {
     basketName: `select goods_nm from tb_basket`,
 
     // 장바구니
-    basketList: `select b.* from tb_basket as b join tb_user as u on b.user_no = u.user_no`
+    basketList: `select b.* from tb_basket as b join tb_user as u on b.user_no = u.user_no`,
+
+    // 회원 정보 수정
+    selectProfile: `select * from tb_user where user_no = ?;`,
+    updateProfile: `update tb_user
+                    set user_email = ?, user_phone = ?, user_zipcode = ?, user_adr1 = ?, user_adr2 = ?
+                    where user_id = ?`,
 }
