@@ -59,7 +59,7 @@ module.exports = {
 
 
     // 카테고리별 상품 리스트
-    goodsList: `select goods_no, goods_nm, goods_img, goods_price from tb_goods WHERE goods_category = ?`,
+    goodsList: `select goods_no, goods_nm, goods_img, goods_price, goods_category from tb_goods WHERE goods_category = ?`,
 
     // 이벤트 리스트
     eventList: `select goods_no, goods_nm, goods_img, goods_price from tb_goods`,
