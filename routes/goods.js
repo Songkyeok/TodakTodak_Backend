@@ -119,7 +119,7 @@ router.get('/goodsDetail/:goodsno', function(req, res, next) {
         
     })
 })
-
+// 신상품 리스트
 router.get('/newGoodsList', (req, res) => {
     db.query(sql.newGoodsList, (error, results) => {
         if(error){
@@ -128,7 +128,7 @@ router.get('/newGoodsList', (req, res) => {
         res.json(results);
     })
 })
-
+// 인기상품 리스트
 router.get('/bestGoodsList', (req, res) => {
     db.query(sql.newGoodsList, (error, results) => {
         if(error){
@@ -220,11 +220,17 @@ router.get('/basket', (req, res) => {
 //장바구니 담기
 router.post('/basketInsert', (req, res, next) => {
     const basket = req.body;
-    db.query(sql.basket_add, [basket.goods_no, basket.user_no, basket.basket_img, basket.basket_nm, basket.basket_price, basket.basket_cnt], function(err, data) {
+    db.query(sql.basket_select, [basket.goods_no, basket.user_no, basket.basket_img, basket.basket_nm, basket.basket_price, basket.basket_cnt], function(err, data) {
+
+        console.log("data ===>>>", data)
         if(err){
-            return res.status(200).json({ message: '실패' });
+            console.log("err ==>>", err);
+            return res.status(500).json({ error: err });
+        } else {
+            return res.status(200).json(data);
         }
-        return res.json(data);
+        
+        
     })
 })
 
