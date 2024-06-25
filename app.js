@@ -31,8 +31,10 @@ const goods = require('./routes/goods');
 
 
 
+
 app.use('/auth', auth);
 app.use('/goods', goods);
+
 
 
 app.listen(3000, function() {
