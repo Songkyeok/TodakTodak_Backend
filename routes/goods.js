@@ -214,27 +214,54 @@ router.post('/basketInsert', (req, res, next) => {
 
 router.post('/likeInsert', (req, res, next) => {
     const like = req.body;
-    console.log(like)
 
     db.query(sql.like_check, [like.user_no, like.goods_no], function (err, results, fields){
-        if(error){
-            return res.status(500).json({error: '좋아요 체크 에러'})
+        if(err){
+            return res.status(500).json({error: '좋아요 체크 에러'});
         }
 
         if(results.length > 0) {
             return res.status(200).json({ message: '좋아요 성공', isLiked: true });
         }else{
-
             db.query(sql.like_add, [like.user_no, like.goods_no], function(err, results, fields){
                 if(err){
-                    return res.status(200).json({ message: '찜 누르기 실패'});
+                    console.log(err)
+                    return res.status(500).json({ message: '찜 누르기 실패'});
                 }
-                return res.json(results);
-            })
+                return res.status(200).json({ message: '찜 입력 성공', isLiked: false });
+            });
         }
+    });
+});
+
+router.post('/likeDelete', (req, res, next) => {
+    const like = req.body;
+
+    db.query(sql.like_delete, [like.goods_no, like.user_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ error : '좋아요 삭제 에러'});
+        }
+        return res.status(200).json({ message: '좋아요 삭제', isLiked: false });
     })
 })
 
+router.post('/likeCheck', (req, res, next) => {
+    const like = req.body;
+    
+    db.query(sql.like_check, [like.goods_no, like.user_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ error : '좋아요 체크 실패'})
+        }else if(results.length > 0){
+            return res.status(200).json({ message: '좋아요 성공', isLiked: true })
+        }else{
+            return res.status(200).json({ isLiked: false })
+        }
+    })
+})
+router.post('/orderpay', (req, res, next) => {
+    const order = req.body;
+    console.log(order);
 
+})
 
 module.exports = router;

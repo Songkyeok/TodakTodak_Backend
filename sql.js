@@ -38,8 +38,8 @@ module.exports = {
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
     like_delete: `DELETE FROM tb_like WHERE goods_no =? AND user_no = ?;`,
-    like_check: `SELECT user_no, goods_no FROM tb_like where = ? AND ?`,
-
+    like_check: `SELECT user_no, goods_no FROM tb_like where goods_no = ? AND user_no = ?`,
+    
     // 네이버
     naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
     naverJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
