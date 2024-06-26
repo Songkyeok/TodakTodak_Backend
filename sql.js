@@ -30,12 +30,15 @@ module.exports = {
     bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
 
+    //주문하기
+    orderGoods: `INSERT INTO tb_order(user_no, order_tp, order_tc, goods_no) VALUES(?,?,?,?);`,
+    
 
     //장바구니 담기
     basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket;`,
 
-    basket_add: `INSERT INTO tb_basket (goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
-
+    basket_add: `INSERT INTO tb_basket(goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
+    basket_check: `SELECT basket_no FROM tb_basket WHERE user_no = ? AND goods_no = ?`,
     
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
