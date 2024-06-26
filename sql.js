@@ -30,17 +30,24 @@ module.exports = {
     bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
 
+    //주문하기
+    orderGoods: `INSERT INTO tb_order(user_no, order_tp, order_tc, goods_no) VALUES(?,?,?,?);`,
+    
 
     //장바구니 담기
     basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
 
-    basket_add: `INSERT INTO tb_basket (goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
-
+    basket_add: `INSERT INTO tb_basket(goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
+    basket_check: `SELECT basket_no FROM tb_basket WHERE user_no = ? AND goods_no = ?`,
     
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
     like_delete: `DELETE FROM tb_like WHERE goods_no =? AND user_no = ?;`,
     like_check: `SELECT user_no, goods_no FROM tb_like where goods_no = ? AND user_no = ?`,
+    like_list: `SELECT l.like_no, l.user_no, l.goods_no, g.goods_nm, g.goods_price, g.goods_img
+               FROM tb_like l
+               JOIN tb_goods g ON l.goods_no = g.goods_no
+               WHERE l.user_no = ?`,
     
     // 네이버
     naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
