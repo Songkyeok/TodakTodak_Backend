@@ -149,56 +149,6 @@ router.get('/categoryGoodsList/:category', (req, res) => { // 여기의 :categor
         res.json(results);
     })
 })
-// router.get('/toyGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/bathGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/cleanGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/outsideGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/babyGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
 
 // 이벤트 리스트 조회
 router.get('/eventList/:event', (req, res) => {
