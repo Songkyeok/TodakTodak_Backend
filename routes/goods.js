@@ -216,6 +216,7 @@ router.post('/likeInsert', (req, res, next) => {
 
 router.post('/likeDelete', (req, res, next) => {
     const like = req.body;
+    console.log(like);
 
     db.query(sql.like_delete, [like.goods_no, like.user_no], function(err, results, fields){
         if(err){

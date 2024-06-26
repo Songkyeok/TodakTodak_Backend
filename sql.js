@@ -44,6 +44,10 @@ module.exports = {
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
     like_delete: `DELETE FROM tb_like WHERE goods_no =? AND user_no = ?;`,
     like_check: `SELECT user_no, goods_no FROM tb_like where goods_no = ? AND user_no = ?`,
+    like_list: `SELECT l.like_no, l.user_no, l.goods_no, g.goods_nm, g.goods_price, g.goods_img
+               FROM tb_like l
+               JOIN tb_goods g ON l.goods_no = g.goods_no
+               WHERE l.user_no = ?`,
     
     // 네이버
     naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
