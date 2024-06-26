@@ -35,7 +35,7 @@ module.exports = {
     
 
     //장바구니 담기
-    basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket;`,
+    basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
 
     basket_add: `INSERT INTO tb_basket(goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
     basket_check: `SELECT basket_no FROM tb_basket WHERE user_no = ? AND goods_no = ?`,

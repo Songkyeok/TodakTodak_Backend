@@ -170,6 +170,28 @@ router.get('/basket', (req, res) => {
 //장바구니 담기
 router.post('/basketInsert', (req, res, next) => {
     const basket = req.body;
+
+    db.query(sql.basket_add, [basket.goods_no, basket.user_no, basket.basket_img, basket.basket_nm, basket.basket_price, basket.basket_cnt], function(err, results, fields) {
+
+        if(err){
+            return res.status(500).json({ error: err });
+        } else {
+            return res.status(200).json(results);
+        }
+        
+    })
+})
+//장바구니 상품조회
+router.post('/basketList', (req, res, next) => {
+    const userno = req.body;
+    console.log(userno);
+    db.query(sql.basket_select,[userno.user_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({err})
+        }else{
+            return res.status(200).json(results)
+            console.log(results);
+
     db.query(sql.basket_check,[basket.user_no, basket.goods_no], function(err, results, fields) {
 
         if(results <= 0){
@@ -187,6 +209,7 @@ router.post('/basketInsert', (req, res, next) => {
 
         }else{
             return res.status(200).json({ message: '이미 담겨 있는 상품입니다.'});
+
         }
     })
     
