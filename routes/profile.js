@@ -16,4 +16,16 @@ router.post('/selectProfile', (req, res) => {
     })
 })
 
+router.post('/likeList/:user_no', function (request, response, next) {
+    const user_no = request.params.user_no;
+
+    db.query(sql.like_list, [user_no], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '에러' });
+        }
+        return response.status(200).json(results);
+    });
+});
+
 module.exports = router;
