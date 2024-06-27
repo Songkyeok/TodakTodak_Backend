@@ -149,56 +149,6 @@ router.get('/categoryGoodsList/:category', (req, res) => { // 여기의 :categor
         res.json(results);
     })
 })
-// router.get('/toyGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/bathGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/cleanGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/outsideGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
-// router.get('/babyGoodsList/:goods_category', (req, res) => {
-//     const category = req.params.goods_category;
-
-//     db.query(sql.goodsList, [category], (error, results) => {
-//         if(error){
-//             return res.status(500).json({error: 'error'});
-//         }
-//         res.json(results);
-//     })
-// })
 
 // 이벤트 리스트 조회
 router.get('/eventList/:event', (req, res) => {
@@ -226,7 +176,6 @@ router.post('/basketInsert', (req, res, next) => {
         if(results <= 0){
 
             db.query(sql.basket_add, [basket.goods_no, basket.user_no, basket.basket_img, basket.basket_nm, basket.basket_price, basket.basket_cnt], function(err, results, fields) {
-        
                 if(err){
                     console.log("err ==>>", err);
                     return res.status(500).json({ error: err });
@@ -245,13 +194,11 @@ router.post('/basketInsert', (req, res, next) => {
 router.post('/basketList', (req, res, next) => {
     const userno = req.body;
     console.log(userno);
-    db.query(sql.basket_select,[userno.user_no], function(err, results, fields){
+    db.query(sql.basket_select, [userno.user_no], function(err, results, fields){
         if(err){
             return res.status(500).json({err})
         }else{
             return res.status(200).json(results)
-            console.log(results);
-
         }
     })
 })
@@ -313,10 +260,31 @@ router.post('/likeCheck', (req, res, next) => {
         }
     })
 })
+
 router.post('/orderpay', (req, res, next) => {
     const order = req.body;
-    console.log(order);
+    
+    db.query(sql.orderGoods, [order.order_tc, order.order_tp, order.user_no, order.goods_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ err : '주문정보 입력 실패'});
+        }else{
+           
+            
+        }
+    })
+})
 
+router.post('/getOrder', (req, res, next) => {
+    const order = req.body;
+    
+    db.query(sql.order_select, [order.user_no], function(err, results, fields){
+        console.log(results)
+        if(err){
+            return res.status(500).json({ message: '주문정보 불러오기 실패'});
+        }else{
+            return res.status(200).json(results);
+        }
+    }) 
 })
 
 module.exports = router;
