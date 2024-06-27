@@ -84,6 +84,11 @@ module.exports = {
     updateProfile: `update tb_user
                     set user_email = ?, user_phone = ?, user_zipcode = ?, user_adr1 = ?, user_adr2 = ?
                     where user_id = ?`,
+    // 비밀번호 변경
+    selectPw: `select user_pw from tb_user where user_no = ?`,
+    updatePw: `update tb_user
+                set user_pw = ?
+                where user_no = ?`,
     
     // 회원 관리
     selectUserList: `select user_no, user_nm, user_zipcode, user_adr1, user_adr2, user_email, user_phone, user_point from tb_user`, // where문 추가필요

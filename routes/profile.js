@@ -21,12 +21,30 @@ router.post("/updateProfile", (req, res) => {
         if(err) {
             return res.status(500).json({ error: err })
         }
-
-        console.log(data);
         res.json(data);
     })
+})
 
-    console.log(data);
+router.post("/updatePw", (req, res) => {
+    db.query(sql.selectPw, [req.body.user_no], (err, data) => {
+        if(err) {
+            return res.status(500).json({ error: err });
+        }
+        const comparePw = bcrypt.compareSync(req.body.user_pw, data[0].user_pw);
+
+        if(comparePw) {
+            const encryptedPW = bcrypt.hashSync(req.body.user_pw_new, 10);
+
+            db.query(sql.updatePw, [encryptedPW, req.body.user_no], (err, data) => {
+                if(err) {
+                    return res.status(500).json({ error: err })
+                }
+                return res.status(200).json({ message: "success" })
+            })
+        } else {
+            return res.status(200).json({ message: "current_pw_err" })
+        }
+    })
 })
 
 router.post('/likeList/:user_no', function (request, response, next) {
