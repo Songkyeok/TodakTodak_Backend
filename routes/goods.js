@@ -149,6 +149,56 @@ router.get('/categoryGoodsList/:category', (req, res) => { // 여기의 :categor
         res.json(results);
     })
 })
+// router.get('/toyGoodsList/:goods_category', (req, res) => {
+//     const category = req.params.goods_category;
+
+//     db.query(sql.goodsList, [category], (error, results) => {
+//         if(error){
+//             return res.status(500).json({error: 'error'});
+//         }
+//         res.json(results);
+//     })
+// })
+// router.get('/bathGoodsList/:goods_category', (req, res) => {
+//     const category = req.params.goods_category;
+
+//     db.query(sql.goodsList, [category], (error, results) => {
+//         if(error){
+//             return res.status(500).json({error: 'error'});
+//         }
+//         res.json(results);
+//     })
+// })
+// router.get('/cleanGoodsList/:goods_category', (req, res) => {
+//     const category = req.params.goods_category;
+
+//     db.query(sql.goodsList, [category], (error, results) => {
+//         if(error){
+//             return res.status(500).json({error: 'error'});
+//         }
+//         res.json(results);
+//     })
+// })
+// router.get('/outsideGoodsList/:goods_category', (req, res) => {
+//     const category = req.params.goods_category;
+
+//     db.query(sql.goodsList, [category], (error, results) => {
+//         if(error){
+//             return res.status(500).json({error: 'error'});
+//         }
+//         res.json(results);
+//     })
+// })
+// router.get('/babyGoodsList/:goods_category', (req, res) => {
+//     const category = req.params.goods_category;
+
+//     db.query(sql.goodsList, [category], (error, results) => {
+//         if(error){
+//             return res.status(500).json({error: 'error'});
+//         }
+//         res.json(results);
+//     })
+// })
 
 // 이벤트 리스트 조회
 router.get('/eventList/:event', (req, res) => {
@@ -170,6 +220,7 @@ router.get('/basket', (req, res) => {
 //장바구니 담기
 router.post('/basketInsert', (req, res, next) => {
     const basket = req.body;
+
     db.query(sql.basket_check,[basket.user_no, basket.goods_no], function(err, results, fields) {
 
         if(results <= 0){
@@ -189,7 +240,20 @@ router.post('/basketInsert', (req, res, next) => {
             return res.status(200).json({ message: '이미 담겨 있는 상품입니다.'});
         }
     })
-    
+})
+//장바구니 상품조회
+router.post('/basketList', (req, res, next) => {
+    const userno = req.body;
+    console.log(userno);
+    db.query(sql.basket_select,[userno.user_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({err})
+        }else{
+            return res.status(200).json(results)
+            console.log(results);
+
+        }
+    })
 })
 
 router.post('/likeInsert', (req, res, next) => {
@@ -241,9 +305,7 @@ router.post('/likeCheck', (req, res, next) => {
 router.post('/orderpay', (req, res, next) => {
     const order = req.body;
     console.log(order);
-    db.query(sql.orderGoods, [order.user_no, order.order_tp, order.order_tc, order.goods_no], function(err, results, fields){
-        
-    })
+
 })
 
 module.exports = router;
