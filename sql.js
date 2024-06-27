@@ -1,6 +1,6 @@
 module.exports = {
     // auth
-    getUserNo: `SELECT user_no FROM tb_user WHERE user_id = ?`,
+    getUserNo: `SELECT user_no, user_del FROM tb_user WHERE user_id = ?`,
 
     // 카카오
     kakaoLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
@@ -89,6 +89,9 @@ module.exports = {
     updatePw: `update tb_user
                 set user_pw = ?
                 where user_no = ?`,
+    deleteProfile: `update tb_user
+                    set USER_DEL = "Y"
+                    where user_no = 1;`,
     
     // 회원 관리
     selectUserList: `select user_no, user_nm, user_zipcode, user_adr1, user_adr2, user_email, user_phone, user_point from tb_user where user_del = "N"`, 

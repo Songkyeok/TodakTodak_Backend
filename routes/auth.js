@@ -20,6 +20,11 @@ router.post('/login', (req, res) => {
                 // DB의 패스워드와 입력 값이 동일한 경우
                 if (comparePw) {
                     db.query(sql.getUserNo, [loginUser.user_id], (err, results) => {
+                        if(results[0].user_del == "Y" || results[0].user_del == "y") {
+                            res.status(200).json({
+                                message: "delete_user"
+                            })
+                        }
                         res.status(200).json({
                             message: results[0].user_no
                         })

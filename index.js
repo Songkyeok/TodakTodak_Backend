@@ -21,9 +21,11 @@ app.use(express.urlencoded({
 
 const authRouter = require('./routes/auth');
 const goodsRouter = require('./routes/goods');
+const profileRouter = require('./routes/profile');
 const adminRouter = require('./routes/admin');
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
+app.use('/profile', profileRouter);
 app.use('/admin', adminRouter);
 
 app.listen(3000, function() {

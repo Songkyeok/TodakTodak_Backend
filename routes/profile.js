@@ -47,6 +47,16 @@ router.post("/updatePw", (req, res) => {
     })
 })
 
+router.post("/deleteProfile", (req, res) => {
+    db.query(sql.deleteProfile, [req.body.user_no], (err, data) => {
+        if(err) {
+            return res.status(500).json({ error: err })
+        }
+        return res.status(200).json({ message: "success"});
+    })
+    
+})
+
 router.post('/likeList/:user_no', function (request, response, next) {
     const user_no = request.params.user_no;
 
@@ -58,5 +68,6 @@ router.post('/likeList/:user_no', function (request, response, next) {
         return response.status(200).json(results);
     });
 });
+
 
 module.exports = router;
