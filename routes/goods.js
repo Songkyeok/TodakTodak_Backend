@@ -255,6 +255,17 @@ router.post('/basketList', (req, res, next) => {
         }
     })
 })
+//장바구니 상품 삭제
+router.post('/basketDelete', (req, res, next) => {
+    const basket = req.body;
+
+    db.query(sql.basket_delete, [basket.goods_no, basket.user_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ error : '장바구니 삭제 에러'});
+        }
+        return res.status(200).json({ message: '장바구니 삭제'});
+    })
+})
 
 router.post('/likeInsert', (req, res, next) => {
     const like = req.body;
