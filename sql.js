@@ -31,8 +31,9 @@ module.exports = {
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
 
     //주문하기
-    orderGoods: `INSERT INTO tb_order(user_no, order_tp, order_tc, goods_no) VALUES(?,?,?,?);`,
-    
+    orderGoods: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)
+                (SELECT u.user_nm, u.user_adr1, u.user_adr2, u.user_zipcode, u.user_phone, u.user_no, g.goods_no, ?, ? FROM tb_user u, tb_goods g WHERE u.user_no = ? AND g.goods_no = ?);`,
+    order_select:`SELECT * FROM tb_order WHERE user_no = ?;`,
 
     //장바구니 담기
     basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
