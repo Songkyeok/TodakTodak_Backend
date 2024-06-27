@@ -8,7 +8,7 @@ const path = require('path');
 const multer = require('multer');
 
 // 회원목록 조회 및 삭제관리
-router.post('/userList', (req, res) => {
+router.post('/selectUser', (req, res) => {
     
     db.query(sql.selectUserList, (err, results) => {
         if (err) {
@@ -19,7 +19,7 @@ router.post('/userList', (req, res) => {
     });
 });
 
-router.post('/userDelete', (req, res) => {
+router.post('/deleteUser', (req, res) => {
 
     db.query(sql.deleteUserList, [req.body.user_no], (err, results) => { // [req.body.user_no]로 front에서 보낸 axios의 user_no를 받음
         if(err) {
