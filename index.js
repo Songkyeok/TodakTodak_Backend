@@ -12,7 +12,7 @@ app.use(cors({
     },
     // 기본 값: false,
     // 사용자 인증이 필요한 리소스 접근이 필요한 경우 true 설정 필요.
-    credentials: true
+    credentials: false
 }));
 app.use(express.json());
 app.use(express.urlencoded({
@@ -23,10 +23,12 @@ const authRouter = require('./routes/auth');
 const goodsRouter = require('./routes/goods');
 const profileRouter = require('./routes/profile');
 const adminRouter = require('./routes/admin');
+const reviewRouter = require('./routes/review');
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
 app.use('/profile', profileRouter);
 app.use('/admin', adminRouter);
+app.use('/review', reviewRouter);
 
 app.listen(3000, function() {
     console.log('Server Running at http://localhost:3000');
