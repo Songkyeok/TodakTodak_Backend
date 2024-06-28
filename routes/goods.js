@@ -261,30 +261,53 @@ router.post('/likeCheck', (req, res, next) => {
     })
 })
 
-router.post('/orderpay', (req, res, next) => {
+router.post('/orderpay/:ordertp', (req, res, next) => {
     const order = req.body;
-    
-    db.query(sql.orderGoods, [order.order_tc, order.order_tp, order.user_no, order.goods_no], function(err, results, fields){
-        if(err){
-            return res.status(500).json({ err : '주문정보 입력 실패'});
-        }else{
-           
-            
+    const ordertp = req.params.ordertp;
+    console.log(order);
+    db.query(sql.order_check, [order.user_no], function(err, results, fields){
+        if(results.length > 0){
+            console.log(results)
+            db.query(sql.order_delete, [order.user_no], function(err, results, fields){
+                if(err){
+                    return res.status(500).json({ err : '주문정보 삭제 실패'});
+                }
+                return res.status(200).json({ message: '주문정보 삭제'});
+            })
         }
+        db.query(sql.orderGoods, [order.order_tc, order.order_tp, order.user_no, order.goods_no], function(err, results, fields){
+            if(err){
+                return res.status(500).json({ err : '주문정보 입력 실패'});
+            }else{
+                return res.status(200).json();
+            }
+        })
     })
+    
+
 })
 
 router.post('/getOrder', (req, res, next) => {
     const order = req.body;
     
     db.query(sql.order_select, [order.user_no], function(err, results, fields){
-        console.log(results)
         if(err){
             return res.status(500).json({ message: '주문정보 불러오기 실패'});
         }else{
             return res.status(200).json(results);
         }
     }) 
+})
+
+router.post('/orderDelete', (req, res, next) => {
+    const order = req.body;
+    console.log(order)
+    db.query(sql.order_delete, [order.order_trade_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ err : '주문정보 삭제 실패'});
+        }
+        return res.status(200).json({ message: '주문정보 삭제'});
+    })
 })
 
 module.exports = router;
