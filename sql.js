@@ -98,5 +98,12 @@ module.exports = {
     selectUserList: `select user_no, user_nm, user_zipcode, user_adr1, user_adr2, user_email, user_phone, user_point from tb_user where user_del = "N"`, 
 
     // 회원 삭제
-    deleteUserList : `update tb_user set user_del = 'Y' where user_no = ?`, // 데이터베이스에서 회원을 삭제하지 않고 남기도록 => update를 통해 회원삭제여부를 확인할 수 있는 컬럼 추가
+    deleteUserList: `update tb_user set user_del = 'Y' where user_no = ?`, // 데이터베이스에서 회원을 삭제하지 않고 남기도록 => update를 통해 회원삭제여부를 확인할 수 있는 컬럼 추가
+
+    // 전체 리뷰 조회
+    userReviewList: `SELECT r.review_no, r.review_rating, r.review_img, r.user_no, r.goods_no, r.review_con, r.review_create, u.user_nm
+    FROM tb_review r
+    JOIN tb_goods g ON g.goods_no = r.goods_no
+    JOIN tb_user u ON u.user_no = r.user_no
+    WHERE r.goods_no = ?`
 }
