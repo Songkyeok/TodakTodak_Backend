@@ -1,6 +1,6 @@
 module.exports = {
     // auth
-    getUserNo: `SELECT user_no, user_del FROM tb_user WHERE user_id = ?`,
+    getUserNo: `SELECT user_no, user_del, user_tp FROM tb_user WHERE user_id = ?`,
 
     // 카카오
     kakaoLogin: `SELECT * FROM tb_user WHERE user_id = ?`,

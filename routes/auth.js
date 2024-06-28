@@ -26,7 +26,7 @@ router.post('/login', (req, res) => {
                             })
                         }
                         res.status(200).json({
-                            message: results[0].user_no
+                            message: results[0]
                         })
                     })
                 } else {
