@@ -38,10 +38,13 @@ module.exports = {
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     
     //장바구니
-    basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
+    basket_select: `select basket_no, goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
     basket_add: `INSERT INTO tb_basket(goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
     basket_check: `SELECT basket_no FROM tb_basket WHERE user_no = ? AND goods_no = ?`,
     basket_delete:`DELETE FROM tb_basket WHERE goods_no = ? AND user_no = ?;`,
+    basket_update: `UPDATE tb_basket SET BASKET_CNT = ? WHERE BASKET_NO = ?;`,
+    basket_order: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)
+                (SELECT u.user_nm, u.user_adr1, u.user_adr2, u.user_zipcode, u.user_phone, u.user_no, b.goods_no, b.basket_cnt, ?*? FROM tb_user u, tb_basket b WHERE u.user_no = ? AND b.basket_no = ?);`,
     
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
