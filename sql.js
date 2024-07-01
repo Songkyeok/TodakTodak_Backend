@@ -107,5 +107,6 @@ module.exports = {
     FROM tb_review r
     JOIN tb_goods g ON g.goods_no = r.goods_no
     JOIN tb_user u ON u.user_no = r.user_no
-    WHERE r.goods_no = ?`
+    WHERE r.goods_no = ?`,
+
 }
