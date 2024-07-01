@@ -102,6 +102,13 @@ module.exports = {
     // 회원 삭제
     deleteUserList: `update tb_user set user_del = 'Y' where user_no = ?`, // 데이터베이스에서 회원을 삭제하지 않고 남기도록 => update를 통해 회원삭제여부를 확인할 수 있는 컬럼 추가
 
+    // 아이디 찾기
+    findId: `select user_id from tb_user where user_nm = ? and user_phone = ?`,
+    // 비밀번호 찾기
+    findPw: `select user_no from tb_user where user_id = ? and user_phone = ?`,
+    // 임시 비밀번호 업데이트
+    updateTempPw: `update tb_user set user_pw = ? where user_id = ?`,
+
     // 전체 리뷰 조회
     userReviewList: `SELECT r.review_no, r.review_rating, r.review_img, r.user_no, r.goods_no, r.review_con, r.review_create, u.user_nm
     FROM tb_review r
