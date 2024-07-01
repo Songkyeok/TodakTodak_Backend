@@ -134,6 +134,26 @@ router.post("/join", (req, res) => {
     })
 })
 
+
+//관리자 체크
+router.post('/admin_check', function (req, res) {
+    const user = req.body;
+
+    db.query(sql.admin_check, [user.user_no], function (err, results, fields) {
+        if (results[0].user_tp == 1) {
+            // 로그인한 유저의 TP가 1(관리자)인 경우
+            return res.status(200).json({
+                message: 'admin'
+            })
+        }
+        else {
+            return res.status(200).json({
+                message: 'user'
+            })
+        }
+    });
+});
+
 // 아이디 찾기
 router.post("/findId", (req, res) => {
     db.query(sql.findId, [req.body.user_nm, req.body.user_phone], (err, data) => {
