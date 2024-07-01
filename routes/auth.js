@@ -10,7 +10,7 @@ router.post('/login', (req, res) => {
 
     db.query(sql.id_check, [loginUser.user_id], (err, results) => {
         if(results.length <= 0) {
-            res.status(200).json({
+            return res.status(200).json({
                 message: "undefined_id"
             })
         } else {
@@ -21,17 +21,17 @@ router.post('/login', (req, res) => {
                 if (comparePw) {
                     db.query(sql.getUserNo, [loginUser.user_id], (err, results) => {
                         if(results[0].user_del == "Y" || results[0].user_del == "y") {
-                            res.status(200).json({
+                            return res.status(200).json({
                                 message: "delete_user"
                             })
                         }
-                        res.status(200).json({
+                        return res.status(200).json({
                             message: results[0]
                         })
                     })
                 } else {
                     // 비밀번호 틀린 경우
-                    res.status(200).json ({
+                    return res.status(200).json ({
                         message: 'incorrect_pw'
                     })
                 }
@@ -115,7 +115,7 @@ router.post('/checkUserId', (req, res) => {
         if(error) {
             return res.status(500).json({ error: 'error '});
         }
-        res.json(results);
+        return res.json(results);
     })
 })
 
