@@ -260,31 +260,55 @@ router.post('/likeCheck', (req, res, next) => {
         }
     })
 })
-
 router.post('/orderpay/:ordertp', (req, res, next) => {
     const order = req.body;
     const ordertp = req.params.ordertp;
-    console.log(order);
-    db.query(sql.order_check, [order.user_no], function(err, results, fields){
-        if(results.length > 0){
-            console.log(results)
-            db.query(sql.order_delete, [order.user_no], function(err, results, fields){
+   
+    if(ordertp == 0){
+
+        db.query(sql.order_check, [order.user_no], function(err, results, fields){
+            if(results.length > 0){
+                
+                db.query(sql.order_delete, [order.user_no], function(err, results, fields){
+                    if(err){
+                        return res.status(500).json({ err : '주문정보 삭제 실패'});
+                    }
+                })
+            }
+            db.query(sql.orderGoods, [order.order_tc, order.order_tp, order.user_no, order.goods_no], function(err, results, fields){
                 if(err){
-                    return res.status(500).json({ err : '주문정보 삭제 실패'});
+                    return res.status(500).json({ err : '주문정보 입력 실패'});
+                }else{
+                    return res.status(200).json();
                 }
-                return res.status(200).json({ message: '주문정보 삭제'});
             })
-        }
-        db.query(sql.orderGoods, [order.order_tc, order.order_tp, order.user_no, order.goods_no], function(err, results, fields){
+        })
+    }else if(ordertp == 1){
+        const basket = req.body;
+        const basket_no = req.body.basket_no;
+        const basket_cnt = req.body.basket_cnt;
+        const basket_price = req.body.basket_price;
+        db.query(sql.order_delete, [basket.user_no], function(err, results, fields){
             if(err){
-                return res.status(500).json({ err : '주문정보 입력 실패'});
-            }else{
-                return res.status(200).json();
+                return res.status(500).json({err : '장바구니 주문 삭제 실패'})
             }
         })
-    })
-    
-
+        for(let i = 0; i < basket_no.length; i++){
+            db.query(sql.basket_update, [basket_cnt[i], basket_no[i]], function(err, results, fields){
+                if(err){
+                    return res.status(500).json({ err : '실패'});
+                }
+                
+            })
+            db.query(sql.basket_order, [basket_price[i], basket_cnt[i], basket.user_no, basket_no[i]], function(err, results, fields){
+                if(err){
+                    return res.status(500).json({ err : '주문정보 입력 실패'});
+                }else{
+                    return res.status(200).json();
+                }
+            })
+        }
+    }
 })
 
 router.post('/getOrder', (req, res, next) => {
@@ -309,5 +333,7 @@ router.post('/orderDelete', (req, res, next) => {
         return res.status(200).json({ message: '주문정보 삭제'});
     })
 })
+
+
 
 module.exports = router;
