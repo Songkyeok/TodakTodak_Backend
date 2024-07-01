@@ -10,7 +10,7 @@ const multer = require('multer');
 
 // 상세페이지 전체 리뷰 조회
 router.get('/reviewList/:goods_no',(req, res) => {
-    console.log(req);
+    // console.log(req);
 
     db.query(sql.userReviewList, [req.params.goods_no], (err, results) => { // get 방식이므로 params로 받아야 됨
         if(err) {
@@ -20,6 +20,7 @@ router.get('/reviewList/:goods_no',(req, res) => {
         return res.json(results);
     });
 });
+
 
 
 module.exports = router;

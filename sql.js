@@ -43,10 +43,13 @@ module.exports = {
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     
     //장바구니
-    basket_select: `select goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
+    basket_select: `select basket_no, goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
     basket_add: `INSERT INTO tb_basket(goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt) VALUES(?,?,?,?,?,?);`,
     basket_check: `SELECT basket_no FROM tb_basket WHERE user_no = ? AND goods_no = ?`,
     basket_delete:`DELETE FROM tb_basket WHERE goods_no = ? AND user_no = ?;`,
+    basket_update: `UPDATE tb_basket SET BASKET_CNT = ? WHERE BASKET_NO = ?;`,
+    basket_order: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)
+                (SELECT u.user_nm, u.user_adr1, u.user_adr2, u.user_zipcode, u.user_phone, u.user_no, b.goods_no, b.basket_cnt, ?*? FROM tb_user u, tb_basket b WHERE u.user_no = ? AND b.basket_no = ?);`,
     
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
@@ -100,13 +103,20 @@ module.exports = {
                 where user_no = ?`,
     deleteProfile: `update tb_user
                     set USER_DEL = "Y"
-                    where user_no = 1;`,
+                    where user_no = ?;`,
     
     // 회원 관리
     selectUserList: `select user_no, user_nm, user_zipcode, user_adr1, user_adr2, user_email, user_phone, user_point from tb_user where user_del = "N"`, 
 
     // 회원 삭제
     deleteUserList: `update tb_user set user_del = 'Y' where user_no = ?`, // 데이터베이스에서 회원을 삭제하지 않고 남기도록 => update를 통해 회원삭제여부를 확인할 수 있는 컬럼 추가
+
+    // 아이디 찾기
+    findId: `select user_id from tb_user where user_nm = ? and user_phone = ?`,
+    // 비밀번호 찾기
+    findPw: `select user_no from tb_user where user_id = ? and user_phone = ?`,
+    // 임시 비밀번호 업데이트
+    updateTempPw: `update tb_user set user_pw = ? where user_id = ?`,
 
     // 전체 리뷰 조회
     userReviewList: `SELECT r.review_no, r.review_rating, r.review_img, r.user_no, r.goods_no, r.review_con, r.review_create, u.user_nm
@@ -115,3 +125,4 @@ module.exports = {
     JOIN tb_user u ON u.user_no = r.user_no
     WHERE r.goods_no = ?`
 };
+
