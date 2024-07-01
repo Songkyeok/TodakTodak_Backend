@@ -7,13 +7,18 @@ module.exports = {
     kakaoJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
 
     // admin 기능
+    admin_check: `SELECT user_tp FROM tb_user WHERE user_no = ?;`,
     goods_add: `INSERT INTO tb_goods (GOODS_CATEGORY, GOODS_NM, GOODS_IMG, GOODS_CONTENT, GOODS_PRICE, GOODS_CNT) VALUES (?,?,?,?,?,?);`,
     goods_check: `SELECT goods_nm FROM tb_goods WHERE goods_nm = ?;`,
     get_goods_no: `SELECT goods_no FROM tb_goods WHERE goods_nm = ?;`,
     add_image: `UPDATE tb_goods SET goods_img = ?, goods_content = ? WHERE goods_no = ?`,
+    get_image: `SELECT goods_img, goods_content FROM tb_goods WHERE goods_no = ?`,
     delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
+    delete_goods_2: `DELETE FROM tb_goods WHERE goods_no = ?`,
 
     // goods
+    goods_list: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_price, goods_cnt
+                  FROM tb_goods;`,
     goods_main: `SELECT g.*, t.total_orders FROM TB_GOODS g
                 INNER JOIN (
                   SELECT od.GOODS_NO, COUNT(*) AS total_orders
@@ -45,7 +50,8 @@ module.exports = {
     
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
-    like_delete: `DELETE FROM tb_like WHERE goods_no =? AND user_no = ?;`,
+    like_delete: `DELETE FROM tb_like WHERE goods_no = ? AND user_no = ?;`,
+    like_delete_2: `DELETE FROM tb_like WHERE goods_no = ?;`,
     like_check: `SELECT user_no, goods_no FROM tb_like where goods_no = ? AND user_no = ?`,
     like_list: `SELECT l.like_no, l.user_no, l.goods_no, g.goods_nm, g.goods_price, g.goods_img
                FROM tb_like l
@@ -108,4 +114,4 @@ module.exports = {
     JOIN tb_goods g ON g.goods_no = r.goods_no
     JOIN tb_user u ON u.user_no = r.user_no
     WHERE r.goods_no = ?`
-}
+};
