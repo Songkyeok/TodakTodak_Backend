@@ -385,10 +385,11 @@ router.post('/orderpay/:ordertp', (req, res, next) => {
                 if(err){
                     return res.status(500).json({ err : '주문정보 입력 실패'});
                 }else{
-                    return res.status(200).json();
+                    
                 }
             })
         }
+        return res.status(200).json({ message: '장바구니 주문 성공'});
     }
 })
 
