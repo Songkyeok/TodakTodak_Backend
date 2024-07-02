@@ -294,6 +294,20 @@ router.post('/basketDelete', (req, res, next) => {
         return res.status(200).json({ message: '장바구니 삭제'});
     })
 })
+router.post('/updateBasket', (req, res, next) => {
+    const basket = req.body;
+    const basketno = req.body.basket_no;
+    const basketcnt = req.body.basket_cnt;
+    for(let i = 0; i < basket.basket_no.length; i++){
+
+        db.query(sql.basket_update, [basketcnt[i], basketno[i]], function(err, results, fields) {
+            if(err){
+                return res.status(500).json({err : '장바구니 업데이트 실패'})
+            }
+        })
+    }
+    return res.status(200).json({message: '장바구니 업데이트 성공'})
+})
 
 router.post('/likeInsert', (req, res, next) => {
     const like = req.body;
@@ -369,11 +383,6 @@ router.post('/orderpay/:ordertp', (req, res, next) => {
         const basket_no = req.body.basket_no;
         const basket_cnt = req.body.basket_cnt;
         const basket_price = req.body.basket_price;
-        db.query(sql.order_delete, [basket.user_no], function(err, results, fields){
-            if(err){
-                return res.status(500).json({err : '장바구니 주문 삭제 실패'})
-            }
-        })
         for(let i = 0; i < basket_no.length; i++){
             db.query(sql.basket_update, [basket_cnt[i], basket_no[i]], function(err, results, fields){
                 if(err){
@@ -395,6 +404,7 @@ router.post('/orderpay/:ordertp', (req, res, next) => {
 
 router.post('/getOrder', (req, res, next) => {
     const order = req.body;
+    console.log(order.order_tp)
     
     db.query(sql.order_select, [order.user_no], function(err, results, fields){
         if(err){
@@ -402,12 +412,12 @@ router.post('/getOrder', (req, res, next) => {
         }else{
             return res.status(200).json(results);
         }
-    }) 
+    })
+    
 })
 
 router.post('/orderDelete', (req, res, next) => {
     const order = req.body;
-    console.log(order)
     db.query(sql.order_delete, [order.order_trade_no], function(err, results, fields){
         if(err){
             return res.status(500).json({ err : '주문정보 삭제 실패'});
