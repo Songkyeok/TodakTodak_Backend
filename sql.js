@@ -123,6 +123,9 @@ module.exports = {
     FROM tb_review r
     JOIN tb_goods g ON g.goods_no = r.goods_no
     JOIN tb_user u ON u.user_no = r.user_no
-    WHERE r.goods_no = ?`
+    WHERE r.goods_no = ?`,
+
+    // 리뷰 등록
+    addReview: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`
 };
 
