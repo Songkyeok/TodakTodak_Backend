@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
-// 상세페이지 리뷰 정렬
+// 상세페이지 리뷰 정렬 => sql의 order by를 통해 정렬 값을 불러옴 
 function reviewSort(sortCase) {
     let review = ` order by review_no desc`;
 
@@ -39,6 +39,19 @@ router.get('/reviewList/:goods_no',(req, res) => {
         return res.json(results);
     });
 });
+
+// 리뷰 등록
+// router.post('/addReveiw', (req, res) => {
+//     const addReview = req.body;
+
+//     db.query(sql.addReview, [goods.goods_no, user.user_no], (error, results) => {
+//         if(error) {
+//             res.status(500).json({ error: 'error' });
+//         } else {
+//             res.json(results);
+//         }
+//     })
+// })
 
 
 
