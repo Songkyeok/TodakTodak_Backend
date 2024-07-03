@@ -30,4 +30,29 @@ router.post('/deleteUser', (req, res) => {
     })
 })
 
+router.post('/qnaList', (req, res) => {
+    
+    db.query(sql.qna_select, (err, results, fields) => {
+        if(err){
+            return res.status(500).json({ err : '리스트 조회 실패'})
+        }
+        return res.status(200).json({
+            message: '리스트 조회 성공',
+            results: results
+        });
+    })
+})
+
+router.post('/qnaDelete' , (req, res) => {
+    db.query(sql.delete_qna, [req.body.qna_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ error: 'QnA 삭제 에러'});
+        }
+        return res.status(200).json({
+            message: 'QnA 삭제 성공',
+            results: results
+        });
+    })
+})
+
 module.exports = router;

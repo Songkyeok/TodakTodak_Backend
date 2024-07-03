@@ -16,6 +16,12 @@ module.exports = {
     delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
     delete_goods_2: `DELETE FROM tb_goods WHERE goods_no = ?`,
 
+    qna_select:`select qna_create, goods_nm, qna_title, user_nm, qna_answer_admin, qna_no
+                from tb_qna join tb_user on tb_qna.user_no = tb_user.user_no
+                join tb_goods on tb_qna.goods_no = tb_goods.goods_no;`,
+    //is_qna_answer_admin: ``,
+    delete_qna:`DELETE FROM tb_qna WHERE qna_no = ? ;`,
+
     // goods
     goods_list: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_price, goods_cnt
                   FROM tb_goods;`,
