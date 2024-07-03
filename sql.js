@@ -126,6 +126,15 @@ module.exports = {
     WHERE r.goods_no = ?`,
 
     // 리뷰 등록
-    addReview: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`
+    addReview: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`,
+
+    // 마이페이지
+    getInfo: `select user_nm, user_point, user_grade
+              from tb_user
+              where user_no = ?;`,
+    likeCount: `SELECT l.*
+               FROM tb_like l
+               JOIN tb_goods g ON l.goods_no = g.goods_no
+               WHERE l.user_no = ?`,
 };
 
