@@ -68,8 +68,8 @@ router.post('/addGoods', function (req, res) {
                         db.query(sql.get_goods_no,[goods.goods_nm],function(error, results, fields){
                             const filename = results[0].goods_no;
 
-                            const newImgPath = path.join(newDir, `${filename}-0${extname1}`);
-                            const newContentPath = path.join(newDir, `${filename}-1${extname2}`);
+                            const newImgPath = path.join(newDir, `${filename}-0${extname1}`); // 상품 메인이미지
+                            const newContentPath = path.join(newDir, `${filename}-1${extname2}`); // 상품 상세이미지
                             
                             fs.renameSync(dir1, newImgPath);
                             fs.renameSync(dir2, newContentPath);

@@ -40,18 +40,80 @@ router.get('/reviewList/:goods_no',(req, res) => {
     });
 });
 
-// 리뷰 등록
-// router.post('/addReveiw', (req, res) => {
-//     const addReview = req.body;
+// Multer 설정
+const storage = multer.diskStorage({
+    destination(req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename(req, file, cb) {
+        cb(null, file.originalname);
+    },
+});
 
-//     db.query(sql.addReview, [goods.goods_no, user.user_no], (error, results) => {
-//         if(error) {
-//             res.status(500).json({ error: 'error' });
-//         } else {
-//             res.json(results);
-//         }
-//     })
-// })
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+// 리뷰 이미지 등록
+router.post('/upload_img', upload.single('img'), (req, res) => {
+    setTimeout(() => {
+        return res.status(200).json({
+            message: 'success'
+        })
+    }, 2000);
+})
+
+// 리뷰 등록
+router.post('/addReveiws', (req, res) => {
+    const review  = req.body;
+    console.log(review);
+    db.query(sql.addReview, [review.review_con, review.review_img, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], (error, results) => {
+        if(error) {
+            res.status(200).json({ error: '리뷰 등록 실패' });
+        } else {
+            try {
+            const dir = path.join(__dirname, '../uploads', review.review_img);
+            const newDir = path.join(__dirname, '../uploads/uploadReviews/');
+
+            if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
+
+            const extname = path.extname(dir);
+            // const filename = results.insertId;
+            // const newImgPath = path.join(newDir, `${filename}${extname}`);
+            // fs.renameSync(dir, newImgPath);
+
+            db.query(sql.findGoodsNo, [review.goods_no], (error, results) => {
+                const filename = results[0].goods_no;
+
+                const newImgPath = path.join(newDir, `${filename}${extname}`);
+                
+                fs.renameSync(dir, newImgPath);
+
+                db.query(sql.setReviewImg, [`${filename}${extname}`, filename], (error, results) => {
+                    if (error) {
+                        console.log('이미지 추가 실패');
+                    } else {
+                        return res.status(200).json({
+                            message: 'success'
+                        });
+                    }
+                    });
+                });
+            } catch (error) {
+                db.query(sql.delete_reviews, [review.goods_no], (error, results) => {
+                    return res.status(500).json({
+                        message: "fail"
+                    });
+                });
+            }
+        }
+    });
+});
+
+// 리뷰 제거
+
+
 
 
 
