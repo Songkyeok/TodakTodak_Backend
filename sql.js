@@ -131,7 +131,11 @@ module.exports = {
     JOIN tb_user u ON u.user_no = r.user_no
     WHERE r.goods_no = ?`,
 
-    // 리뷰 등록
+
+    addReviews: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`,
+    setReviewImg: `UPDATE tb_review SET review_img = ? where id = ?`,
+    delete_reviews: `DELETE from tb_review where id = ?`,
+    findGoodsNo: `select goods_no from tb_goods`,
     addReview: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`,
 
     // 마이페이지
