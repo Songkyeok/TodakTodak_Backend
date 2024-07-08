@@ -65,51 +65,101 @@ router.post('/upload_img', upload.single('img'), (req, res) => {
 })
 
 // 리뷰 등록
-router.post('/addReveiws', (req, res) => {
-    const review  = req.body;
-    console.log(review);
-    db.query(sql.addReview, [review.review_con, review.review_img, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], (error, results) => {
-        if(error) {
-            res.status(200).json({ error: '리뷰 등록 실패' });
-        } else {
-            try {
-            const dir = path.join(__dirname, '../uploads', review.review_img);
-            const newDir = path.join(__dirname, '../uploads/uploadReviews/');
+// router.post('/addReveiws', (req, res) => {
+//     const review  = req.body;
+//     console.log(review);
+//     db.query(sql.addReview, [review.review_con, review.review_img, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], (error, results) => {
+//         if(error) {
+//             res.status(200).json({ error: '리뷰 등록 실패' });
+//         } else {
+//             try {
+//             const dir = path.join(__dirname, '../uploads', review.review_img);
+//             const newDir = path.join(__dirname, '../uploads/uploadReviews/');
 
-            if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
+//             if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
 
-            const extname = path.extname(dir);
-            // const filename = results.insertId;
-            // const newImgPath = path.join(newDir, `${filename}${extname}`);
-            // fs.renameSync(dir, newImgPath);
+//             const extname = path.extname(dir);
 
-            db.query(sql.findGoodsNo, [review.goods_no], (error, results) => {
-                const filename = results[0].goods_no;
+//             db.query(sql.findGoodsNo, [review.goods_no], (error, results) => {
+//                 const filename = results[0].goods_no;
 
-                const newImgPath = path.join(newDir, `${filename}${extname}`);
+//                 const newImgPath = path.join(newDir, `${filename}${extname}`);
                 
-                fs.renameSync(dir, newImgPath);
+//                 fs.renameSync(dir, newImgPath);
 
-                db.query(sql.setReviewImg, [`${filename}${extname}`, filename], (error, results) => {
-                    if (error) {
-                        console.log('이미지 추가 실패');
-                    } else {
-                        return res.status(200).json({
-                            message: 'success'
-                        });
-                    }
-                    });
-                });
-            } catch (error) {
-                db.query(sql.delete_reviews, [review.goods_no], (error, results) => {
-                    return res.status(500).json({
-                        message: "fail"
-                    });
-                });
-            }
+//                 db.query(sql.setReviewImg, [`${filename}${extname}`, filename], (error, results) => {
+//                     if (error) {
+//                         console.log('이미지 추가 실패');
+//                     } else {
+//                         return res.status(200).json({
+//                             message: 'success'
+//                         });
+//                     }
+//                     });
+//                 });
+//             } catch (error) {
+//                 db.query(sql.delete_reviews, [review.goods_no], (error, results) => {
+//                     return res.status(500).json({
+//                         message: "fail"
+//                     });
+//                 });
+//             }
+//         }
+//     });
+// });
+
+// router.post('/getOrderGoods', (req, res, next) => {
+//     const order = req.body;
+    
+//     db.query(sql.order_select_goods, [order.goods_no], function(err, results, fields){
+//         if(err){
+//             return res.status(500).json({ message: '주문정보 불러오기 실패'});
+//         }else{
+//             return res.status(200).json(results);
+//         }
+//     })
+    
+// })
+
+// 리뷰등록 세번째 등록꺼
+router.post('/addReviews', function (req, res, next) {
+    const review = request.body;
+
+    // 이미지를 제외한 리뷰 정보 먼저 입력
+    db.query(sql.review_write, [review.con, review.user_no, review.goods_no, reivew.order_no, review.order_status, reivew.review_rating], function (error, result) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'error' });
         }
-    });
-});
+
+        // 리뷰 번호 확인
+        db.query(sql.get_review_no, [review.order_no], function (error, results, fields) {
+            if (error) {
+                console.error(error);
+                return response.status(500).json({ error: 'error' });
+            }
+        })
+        const filename = result[0].review_no;
+
+        const pastDir = `${__dirname}` + `../../uploads/` + review.review_img;
+        const newDir = `${__dirname}` + `../../uploads/uploadReviews/`;
+
+        const extension = review.review_img.substring(review.review_img.lastIndexOf('.'))
+
+        fs.rename(pastDir, newDir + filename + extension, (err) => {
+            if (error) {
+                return express.response.status(500).json();
+            } else {
+                // 리뷰 이미지 삽입
+                db.query(sql.review_img_insert, [filename + extension, result[0].review_no], function (error, results, fields) {
+                    if (error) {
+                        return response.status(500).json();
+                    }
+                })
+            }
+        })
+    })
+})
 
 // 리뷰 제거
 
