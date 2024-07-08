@@ -24,11 +24,13 @@ const goodsRouter = require('./routes/goods');
 const profileRouter = require('./routes/profile');
 const adminRouter = require('./routes/admin');
 const reviewRouter = require('./routes/review');
+const mypageRouter = require('./routes/mypage');
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
 app.use('/profile', profileRouter);
 app.use('/admin', adminRouter);
 app.use('/review', reviewRouter);
+app.use('/mypage', mypageRouter);
 
 app.listen(3000, function() {
     console.log('Server Running at http://localhost:3000');

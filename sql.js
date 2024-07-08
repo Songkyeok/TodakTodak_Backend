@@ -16,6 +16,12 @@ module.exports = {
     delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
     delete_goods_2: `DELETE FROM tb_goods WHERE goods_no = ?`,
 
+    qna_select:`select qna_create, goods_nm, qna_title, user_nm, qna_answer_admin, qna_no
+                from tb_qna join tb_user on tb_qna.user_no = tb_user.user_no
+                join tb_goods on tb_qna.goods_no = tb_goods.goods_no;`,
+    //is_qna_answer_admin: ``,
+    delete_qna:`DELETE FROM tb_qna WHERE qna_no = ? ;`,
+
     // goods
     goods_list: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_price, goods_cnt
                   FROM tb_goods;`,
@@ -125,13 +131,20 @@ module.exports = {
     JOIN tb_user u ON u.user_no = r.user_no
     WHERE r.goods_no = ?`,
 
-    // 리뷰 등록
+
     addReviews: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`,
-
     setReviewImg: `UPDATE tb_review SET review_img = ? where id = ?`,
-
     delete_reviews: `DELETE from tb_review where id = ?`,
+    findGoodsNo: `select goods_no from tb_goods`,
+    addReview: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`,
 
-    findGoodsNo: `select goods_no from tb_goods`
+    // 마이페이지
+    getInfo: `select user_nm, user_point, user_grade
+              from tb_user
+              where user_no = ?;`,
+    likeCount: `SELECT l.*
+               FROM tb_like l
+               JOIN tb_goods g ON l.goods_no = g.goods_no
+               WHERE l.user_no = ?`,
 };
 
