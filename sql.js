@@ -43,11 +43,15 @@ module.exports = {
     getEventList: `select * from tb_goods where goods_category = 7`,
 
     //주문하기
-    orderGoods: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)
-                (SELECT u.user_nm, u.user_adr1, u.user_adr2, u.user_zipcode, u.user_phone, u.user_no, g.goods_no, ?, ? FROM tb_user u, tb_goods g WHERE u.user_no = ? AND g.goods_no = ?);`,
+    order_insert: `INSERT INTO tb_order
+                (order_nm, order_adr1, order_adr2, order_zipcode, order_phone, order_memo, order_tc, order_tp, user_no)
+                VALUES(?,?,?,?,?,?,?,?,?);`,
+    order_detail_insert: `INSERT INTO tb_order_detail(order_trade_no, goods_no, order_goods_cnt) VALUES(?,?,?);`,
+    order_goods_cnt: `UPDATE tb_goods SET goods_cnt = goods_cnt - ? WHERE goods_no = ?;`,
     order_select: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_delete: `DELETE FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
+
     
     //장바구니
     basket_select: `select basket_no, goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
