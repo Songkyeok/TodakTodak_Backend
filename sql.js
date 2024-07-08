@@ -38,8 +38,9 @@ module.exports = {
     goods_detail: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
 
     goods_all: `SELECT * FROM tb_goods;`,
-    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
-    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+
+    // 이벤트 페이지
+    getEventList: `select * from tb_goods where goods_category = 7`,
 
     //주문하기
     orderGoods: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)

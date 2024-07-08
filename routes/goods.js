@@ -426,6 +426,15 @@ router.post('/orderDelete', (req, res, next) => {
     })
 })
 
+// 이벤트 페이지 조회
+router.get("/getEventList", (req, res) => {
+    db.query(sql.getEventList, (err, data) => {
+        if(err) {
+            return res.status(500).json( console.error(err) )
+        }
+        return res.status(200).json(data);
+    })
+})
 
 
 module.exports = router;
