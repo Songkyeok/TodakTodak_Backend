@@ -138,14 +138,15 @@ module.exports = {
     WHERE r.goods_no = ?`,
 
     // 리뷰 등록
-    addReviews: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO)
-                 SELECT ?, ?, ?, ?, od.goods_no, od.order_trade_no
-                 FROM tb_order od
-                 JOIN tb_order_detail ON order_trade_no = od.order_trade_no
-                 WHERE od.user_no = ? AND od.goods_no = ? AND od.order_trade_no = ? ;`,
+    addReviews: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, ORDER_TRADE_NO, GOODS_NO) 
+                  VALUES (?, ?, ?, ?, (select order_trade_no from tb_order where user_no = ? and order_status = 3), (select gods_no from tb_order_detail where order_trade_no = ?))`,
+    selectOrderTn: `SELECT order_trade_no FROM tb_order WHERE user_no = ? AND order_status = 3`,
     setReviewImg: `UPDATE tb_review SET review_img = ? where id = ?`,
     delete_reviews: `DELETE from tb_review where id = ?`,
-    findGoodsNo: `select goods_no from tb_goods`,
+    findGoodsNo: `SELECT goods_no FROM tb_order_detail WHERE order_trade_no = ?`,
+    findUser: `SELECT o.user_no FROM tb_order o
+                JOIN tb_order_detail od ON o.order_trade_no = od.order_trade_no
+                WHERE od.good_no = ?`,
     order_select_goods: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 3 AND goods_no = ? ;`,
     // review_write: `INSERT INTO tb_review (review_con, user_no, goods_no, order_trade_no, review_img, review_rating) VALUES (?, ?, ?, ?, ?, ?)`,
     // get_review_no: `SELECT review_no FROM tb_review WHERE order_trade_no = ?`,
