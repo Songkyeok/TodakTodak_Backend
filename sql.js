@@ -35,18 +35,24 @@ module.exports = {
                   ORDER BY total_orders DESC
 
                 ) AS t ON g.GOODS_NO = t.GOODS_NO;`,
+    get_goods_info: `SELECT goods_no, goods_category, goods_nm, goods_price, goods_img, goods_content, goods_cnt FROM tb_goods WHERE goods_no = ?`,
     goods_detail: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
-
+    update_goods: `UPDATE tb_goods SET goods_nm = ?, goods_category = ?, goods_price = ?, goods_cnt = ?  WHERE goods_no = ?`,
     goods_all: `SELECT * FROM tb_goods;`,
-    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
-    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+
+    // 이벤트 페이지
+    getEventList: `select * from tb_goods where goods_category = 7`,
 
     //주문하기
-    orderGoods: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)
-                (SELECT u.user_nm, u.user_adr1, u.user_adr2, u.user_zipcode, u.user_phone, u.user_no, g.goods_no, ?, ? FROM tb_user u, tb_goods g WHERE u.user_no = ? AND g.goods_no = ?);`,
+    order_insert: `INSERT INTO tb_order
+                (order_nm, order_adr1, order_adr2, order_zipcode, order_phone, order_memo, order_tc, order_tp, user_no)
+                VALUES(?,?,?,?,?,?,?,?,?);`,
+    order_detail_insert: `INSERT INTO tb_order_detail(order_trade_no, goods_no, order_goods_cnt) VALUES(?,?,?);`,
+    order_goods_cnt: `UPDATE tb_goods SET goods_cnt = goods_cnt - ? WHERE goods_no = ?;`,
     order_select: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_delete: `DELETE FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
+
     
     //장바구니
     basket_select: `select basket_no, goods_no, user_no, basket_img, basket_nm, basket_price, basket_cnt from tb_basket WHERE user_no = ?;`,
@@ -74,8 +80,8 @@ module.exports = {
 
     
     // 메인 페이지
-    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
-    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods`,
+    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7)`,
+    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7)`,
 
 
     // 로컬 회원가입
@@ -133,7 +139,19 @@ module.exports = {
     WHERE r.goods_no = ?`,
 
     // 리뷰 등록
-    addReview: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, GOODS_NO, ORDER_TRADE_NO) VALUES (?,?,?,?,?,?);`,
+    addReviews: `INSERT INTO tb_reviews (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, ORDER_TRADE_NO, GOODS_NO) 
+                  VALUES (?, ?, ?, ?, (select order_trade_no from tb_order where user_no = ? and order_status = 3), (select gods_no from tb_order_detail where order_trade_no = ?))`,
+    selectOrderTn: `SELECT order_trade_no FROM tb_order WHERE user_no = ? AND order_status = 3`,
+    setReviewImg: `UPDATE tb_review SET review_img = ? where id = ?`,
+    delete_reviews: `DELETE from tb_review where id = ?`,
+    findGoodsNo: `SELECT goods_no FROM tb_order_detail WHERE order_trade_no = ?`,
+    findUser: `SELECT o.user_no FROM tb_order o
+                JOIN tb_order_detail od ON o.order_trade_no = od.order_trade_no
+                WHERE od.good_no = ?`,
+    order_select_goods: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 3 AND goods_no = ? ;`,
+    // review_write: `INSERT INTO tb_review (review_con, user_no, goods_no, order_trade_no, review_img, review_rating) VALUES (?, ?, ?, ?, ?, ?)`,
+    // get_review_no: `SELECT review_no FROM tb_review WHERE order_trade_no = ?`,
+    // review_img_insert: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
 
     //Q&A 등록/조회
 

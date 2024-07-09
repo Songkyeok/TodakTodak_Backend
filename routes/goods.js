@@ -68,8 +68,8 @@ router.post('/addGoods', function (req, res) {
                         db.query(sql.get_goods_no,[goods.goods_nm],function(error, results, fields){
                             const filename = results[0].goods_no;
 
-                            const newImgPath = path.join(newDir, `${filename}-0${extname1}`);
-                            const newContentPath = path.join(newDir, `${filename}-1${extname2}`);
+                            const newImgPath = path.join(newDir, `${filename}-0${extname1}`); // 상품 메인이미지
+                            const newContentPath = path.join(newDir, `${filename}-1${extname2}`); // 상품 상세이미지
                             
                             fs.renameSync(dir1, newImgPath);
                             fs.renameSync(dir2, newContentPath);
@@ -187,6 +187,33 @@ router.get('/goodsDetail/:goodsno', function(req, res, next) {
         
         res.json(results);
         
+    })
+})
+
+//상품 수정시 정보 불러오기
+router.post('/get_goods_info', function (request, response, next) {
+    const goods_no = request.body.goodsno
+    db.query(sql.get_goods_info, [goods_no], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'goods_info_error' })
+        }
+        response.json(results);
+    })
+})
+
+//상품 수정
+router.post('/update_goods', function (request, response, next) {
+    const goods = request.body.goods
+    console.log(goods);
+    db.query(sql.update_goods, [goods.goods_nm, goods.goods_category, goods.goods_price, goods.goods_cnt, goods.goods_no], function(error, results, fields) {
+        if (error) {
+            console.log(error);
+            return response.status(500).json({ error: 'goods_update_error' })
+        }
+        else {
+            return response.status(200).json({ message: 'update_complete' })
+        }
     })
 })
 
@@ -367,51 +394,62 @@ router.post('/likeCheck', (req, res, next) => {
         }
     })
 })
-router.post('/orderpay/:ordertp', (req, res, next) => {
+router.post('/orderPay', (req, res, next) => {
     const order = req.body;
-    const ordertp = req.params.ordertp;
-   
-    if(ordertp == 0){
+    const orderDetail = req.body.order_detail;
+        
+    db.query(sql.order_insert, [order.order_nm, order.order_adr1, order.order_adr2, order.order_zipcode, order.order_phone, order.order_memo, order.order_tc, order.order_tp, order.user_no], function(err, results, fields){
+        if(err){
+            return res.status(500).json({ message : '주문 실패'})
+        }
+        const trade_no = results.insertId;
+        
+        if(Array.isArray(orderDetail)){
+            const detail = orderDetail.map((detail) => {
+                return new Promise((resolve, reject) => {
+                    db.query(sql.order_detail_insert, [trade_no, detail.goods_no, detail.order_goods_cnt], function(err, results, fields){
+                        if(err){
+                            reject(err);
+                        }else{
+                            resolve();
+                        }
+                    });
+                });
+            });
 
-        db.query(sql.order_check, [order.user_no], function(err, results, fields){
-            if(results.length > 0){
-                
-                db.query(sql.order_delete, [order.user_no], function(err, results, fields){
-                    if(err){
-                        return res.status(500).json({ err : '주문정보 삭제 실패'});
-                    }
+            Promise.all(detail)
+                .then(() => {
+                    const update = orderDetail.map((detail) => {
+                        return new Promise((resolve, reject) => {
+                            db.query(sql.order_goods_cnt, [detail.order_goods_cnt, detail.goods_no], function(err, results, fields){
+                                if(err){
+                                    console.log('재고량 수정 실패');
+                                    return reject(err);
+                                }
+                                resolve();
+                            })
+                        })
+                    })
+                    return Promise.all(update);
                 })
-            }
-            db.query(sql.orderGoods, [order.order_tc, order.order_tp, order.user_no, order.goods_no], function(err, results, fields){
+                .catch((err) => {
+                    console.error('주문 상세 데이터 삽입 실패: ', err);
+                })
+        }else{
+            db.query(sql.order_detail_insert, [trade_no, orderDetail.goods_no, orderDetail.order_goods_cnt], function(err, results, fields){
                 if(err){
-                    return res.status(500).json({ err : '주문정보 입력 실패'});
+                    return res.status(500).json({ err })
                 }else{
-                    return res.status(200).json();
-                }
-            })
-        })
-    }else if(ordertp == 1){
-        const basket = req.body;
-        const basket_no = req.body.basket_no;
-        const basket_cnt = req.body.basket_cnt;
-        const basket_price = req.body.basket_price;
-        for(let i = 0; i < basket_no.length; i++){
-            db.query(sql.basket_update, [basket_cnt[i], basket_no[i]], function(err, results, fields){
-                if(err){
-                    return res.status(500).json({ err : '실패'});
-                }
-                
-            })
-            db.query(sql.basket_order, [basket_price[i], basket_cnt[i], basket.user_no, basket_no[i]], function(err, results, fields){
-                if(err){
-                    return res.status(500).json({ err : '주문정보 입력 실패'});
-                }else{
-                    
+                    db.query(sql.order_goods_cnt, [orderDetail.order_goods_cnt, orderDetail.goods_no], function(err, results, fields){
+                        if(err){
+                            return res.status(500).json({ message: '상품 재고량 수정 실패'});
+                        }
+                        return res.status(200).json({ message: '완료'});
+                    })
                 }
             })
         }
-        return res.status(200).json({ message: '장바구니 주문 성공'});
-    }
+    })
 })
 
 router.post('/getOrder', (req, res, next) => {
@@ -438,6 +476,15 @@ router.post('/orderDelete', (req, res, next) => {
     })
 })
 
+// 이벤트 페이지 조회
+router.get("/getEventList", (req, res) => {
+    db.query(sql.getEventList, (err, data) => {
+        if(err) {
+            return res.status(500).json( console.error(err) )
+        }
+        return res.status(200).json(data);
+    })
+})
 
 
 module.exports = router;
