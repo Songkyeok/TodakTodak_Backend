@@ -62,6 +62,7 @@ module.exports = {
     basket_update: `UPDATE tb_basket SET BASKET_CNT = ? WHERE BASKET_NO = ?;`,
     basket_order: `INSERT INTO tb_order(order_nm, order_adr1, order_adr2, order_zipcode, order_phone, user_no, goods_no, order_tc, order_tp)
                 (SELECT u.user_nm, u.user_adr1, u.user_adr2, u.user_zipcode, u.user_phone, u.user_no, b.goods_no, b.basket_cnt, ?*? FROM tb_user u, tb_basket b WHERE u.user_no = ? AND b.basket_no = ?);`,
+    basket_cnt:`select goods_cnt from tb_goods where goods_no;`, 
     
     //찜 목록
     like_add: `INSERT INTO tb_like(user_no, goods_no) VALUES((select user_no from tb_user where user_no = ?),(select goods_no from tb_goods where goods_no = ?));`,
@@ -151,6 +152,14 @@ module.exports = {
     // review_write: `INSERT INTO tb_review (review_con, user_no, goods_no, order_trade_no, review_img, review_rating) VALUES (?, ?, ?, ?, ?, ?)`,
     // get_review_no: `SELECT review_no FROM tb_review WHERE order_trade_no = ?`,
     // review_img_insert: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
+
+    //Q&A 등록/조회
+
+    get_Qna: `SELECT u.user_no, u.user_nm, u.user_phone
+               FROM tb_qna q
+               JOIN tb_user u ON q.user_no = u.user_no
+               WHERE q.user_no = '?'`,
+
 
     // 마이페이지
     getInfo: `select user_nm, user_point, user_grade
