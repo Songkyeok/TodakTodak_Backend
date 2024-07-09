@@ -69,7 +69,6 @@ module.exports = {
     like_delete: `DELETE FROM tb_like WHERE goods_no = ? AND user_no = ?;`,
     like_delete_2: `DELETE FROM tb_like WHERE goods_no = ?;`,
     like_check: `SELECT user_no, goods_no FROM tb_like where goods_no = ? AND user_no = ?`,
-    like_count: `SELECT COUNT(*) FROM tb_like WHERE goods_no = ?`,
     like_list: `SELECT l.like_no, l.user_no, l.goods_no, g.goods_nm, g.goods_price, g.goods_img
                FROM tb_like l
                JOIN tb_goods g ON l.goods_no = g.goods_no
