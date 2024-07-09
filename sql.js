@@ -35,8 +35,9 @@ module.exports = {
                   ORDER BY total_orders DESC
 
                 ) AS t ON g.GOODS_NO = t.GOODS_NO;`,
+    get_goods_info: `SELECT goods_no, goods_category, goods_nm, goods_price, goods_img, goods_content, goods_cnt FROM tb_goods WHERE goods_no = ?`,
     goods_detail: `SELECT goods_no, goods_category, goods_nm, goods_img, goods_content, goods_price, goods_cnt FROM tb_goods WHERE goods_no = ?;`,
-
+    update_goods: `UPDATE tb_goods SET goods_nm = ?, goods_category = ?, goods_price = ?, goods_cnt = ?  WHERE goods_no = ?`,
     goods_all: `SELECT * FROM tb_goods;`,
 
     // 이벤트 페이지
