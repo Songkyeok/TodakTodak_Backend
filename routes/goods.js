@@ -190,6 +190,33 @@ router.get('/goodsDetail/:goodsno', function(req, res, next) {
     })
 })
 
+//상품 수정시 정보 불러오기
+router.post('/get_goods_info', function (request, response, next) {
+    const goods_no = request.body.goodsno
+    db.query(sql.get_goods_info, [goods_no], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: 'goods_info_error' })
+        }
+        response.json(results);
+    })
+})
+
+//상품 수정
+router.post('/update_goods', function (request, response, next) {
+    const goods = request.body.goods
+    console.log(goods);
+    db.query(sql.update_goods, [goods.goods_nm, goods.goods_category, goods.goods_price, goods.goods_cnt, goods.goods_no], function(error, results, fields) {
+        if (error) {
+            console.log(error);
+            return response.status(500).json({ error: 'goods_update_error' })
+        }
+        else {
+            return response.status(200).json({ message: 'update_complete' })
+        }
+    })
+})
+
 // 상품 리스트
 router.post('/goodsList', (req, res) => {
     db.query(sql.goods_list, (error, results) => {
