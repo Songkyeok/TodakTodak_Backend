@@ -29,7 +29,7 @@ router.post('/deleteUser', (req, res) => {
         return res.json(results);
     })
 })
-
+//관리자 Q&A 리스트 조회
 router.post('/qnaList', (req, res) => {
     
     db.query(sql.qna_select, (err, results, fields) => {
@@ -42,7 +42,7 @@ router.post('/qnaList', (req, res) => {
         });
     })
 })
-
+//관리자 Q&A 리스트 삭제
 router.post('/qnaDelete' , (req, res) => {
     db.query(sql.delete_qna, [req.body.qna_no], function(err, results, fields){
         if(err){
