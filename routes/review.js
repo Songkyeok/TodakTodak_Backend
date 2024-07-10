@@ -115,10 +115,21 @@ router.post('/upload_img', upload.single('img'), (req, res) => {
 router.post('/addReviews', (req, res) => {
     const review = req.body;
     console.log(review);
+    let review_no; // const는 괄호 안에서만 사용할 수 있지만, let은 전체적으로 사용가능. 하지만 밖에서 사용하려면 this 필요
 
               db.query(sql.addReviews, [review.review_con, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], function(error, results, fields) {
                 if(error) {
                     return res.status(200).json({message: '리뷰 등록 실패!'})
+                } else {
+                    this.review_no = results.insertId;
+                    console.log(this.review_no);
+                    // 포인트 적립 쿼리
+                    db.query(sql.addPoint, [review.user_no, 500], (error, results, fields) => {
+                        if (error) {
+                            console.log('포인트 적립 실패');
+                            return res.status(200).json({ message: "포인트 적립 실패" });
+                        }
+                    })
                 }
                 try {
                     const dir = path.join(__dirname, '../uploads', review.review_img);
@@ -127,14 +138,17 @@ router.post('/addReviews', (req, res) => {
 
                         if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
 
+                            const filename = this.review_no;
                             const extname = path.extname(dir);
-                            const newImgPath = path.join(newDir, `${filename}-${extname}`);
+                            console.log(extname);
+                            const newImgPath = path.join(newDir, `${filename}-0${extname}`);
 
                             fs.renameSync(dir, newImgPath);
 
                             db.query(sql.review_img_add, [`${filename}-${extname}`, filename], function(error, results, fields) {
                                 if (error) {
                                     console.log('이미지 추가 실패!');
+                                    return res.status(200).json({ message: "이미지 추가 실패!" });
                                 } else {
                                     return res.status(200).json({ message: "success!" });
                                 }
@@ -148,7 +162,7 @@ router.post('/addReviews', (req, res) => {
 
 router.get('/getUser/:user_no', (req, res, next) => {
     const user_no = req.params.user_no; // getUser에서 params로 보낸 부분이 있기 때문에 params로 받음 (const response)
-    console.log('nonono', user_no);
+    // console.log('nonono', user_no);
     
     db.query(sql.findUser, [user_no], (err, results) => {
         if(err){
@@ -161,6 +175,10 @@ router.get('/getUser/:user_no', (req, res, next) => {
     });
     
 });
+
+router.post('/getReGoods', (req, res, next) => {
+    const goods_no = req.body;
+})
 
 
 // 리뷰등록 세번째 등록꺼
