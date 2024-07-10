@@ -54,20 +54,6 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 },
 });
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//       const uploadDir = path.join(__dirname, 'uploads');
-//       if (!fs.existsSync(uploadDir)) {
-//         fs.mkdirSync(uploadDir);
-//       }
-//       cb(null, uploadDir);
-//     },
-//     filename: (req, file, cb) => {
-//       cb(null, Date.now() + '-' + file.originalname);
-//     }
-//   });
-
-//   const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 // 리뷰 이미지 등록
 router.post('/upload_img', upload.single('img'), (req, res) => {
@@ -75,84 +61,110 @@ router.post('/upload_img', upload.single('img'), (req, res) => {
         return res.status(200).json({
             message: 'success'
         })
-    }, 2000);
+    }, 1000);
 })
-
-// router.post('/review/upload_img', upload.single('review_img'), (req, res) => {
-//     res.status(200).json({ message: 'success', filePath: req.file.path });
-//   });
   
-// 리뷰 등록
-// router.post('/review/addReview', upload.single('review_img'), (req, res) => {
-//     const { review_con } = req.body;
-//     const review_img = req.file ? req.file.filename : null;
-
-//     const values = [review_con, review_img, req.body.review_rating, req.body.user_no, req.body.goods_no, req.body.order_trade_no];
-
-//     db.query(sql.addReviews, values, (error, results) => {
-//         if (error) {
-//             console.error('error======', error);
-//             res.status(500).json({ error: 'error' });
+// 리뷰 등록 시도 1
+// router.post('/addReviews', (req, res) => {
+//     const review  = req.body;
+//     // const selectOrderTn = sql.selectOrderTn;
+    
+//     console.log(review);
+//     // 쿼리문 점검v, 데이터 대입문제, 프론트에서 데이터 날려준 개수가 상이할 수 있는 문제 확인
+//     db.query(sql.addReviews, [review.review_con, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], (error, results) => {
+//         if(error) {
+//             res.status(200).json({ error: '리뷰 등록 실패' });
 //         } else {
-//             console.log('result======', results);
-//             res.status(200).json({ message: 'success' });
+//             try {
+//             const dir = path.join(__dirname, '../uploads', review.review_img);
+//             const newDir = path.join(__dirname, '../uploads/uploadReviews/');
+
+//             if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
+
+//             const extname = path.extname(dir);
+
+//             db.query(sql.findGoodsNo, [review.goods_no], (error, results) => {
+//                 const filename = results[0].goods_no;
+
+//                 const newImgPath = path.join(newDir, `${filename}${extname}`);
+                
+//                 fs.renameSync(dir, newImgPath);
+
+//                 db.query(sql.setReviewImg, [`${filename}${extname}`, filename], (error, results) => {
+//                     if (error) {
+//                         console.log('이미지 추가 실패');
+//                     } else {
+//                         return res.status(200).json({
+//                             message: 'success'
+//                         });
+//                     }
+//                     });
+//                 });
+//             } catch (error) {
+//                 db.query(sql.delete_reviews, [review.goods_no], (error, results) => {
+//                     return res.status(500).json({
+//                         message: "fail"
+//                     });
+//                 });
+//             }
 //         }
 //     });
-// });    
-  
+// });
 
+//리뷰 등록 시도 2
 router.post('/addReviews', (req, res) => {
-    const review  = req.body;
-    // const selectOrderTn = sql.selectOrderTn;
-    
+    const review = req.body;
     console.log(review);
 
-    db.query(sql.addReviews, [review.review_con, review.review_img, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], (error, results) => {
-        if(error) {
-            res.status(200).json({ error: '리뷰 등록 실패' });
-        } else {
-            try {
-            const dir = path.join(__dirname, '../uploads', review.review_img);
-            const newDir = path.join(__dirname, '../uploads/uploadReviews/');
+    try {
+        db.query(sql.findUser, [review.user_no], function(error, results, fields) {
+            if(results.length > 0) {
 
-            if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
+                db.query(sql.findGoodsNo, [review.goods_no], function(error, results, fields) {
+                    if(results.length > 0) {
 
-            const extname = path.extname(dir);
+                        db.query(sql.addReviews, [review.review_con, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], function(error, results, fields) {
+                            if(error) {
+                                return res.status(200).json({message: '리뷰 등록 실패!'})
+                            }
+                            try {
+                                const dir = path.join(__dirname, '../uploads', review.review_img);
 
-            db.query(sql.findGoodsNo, [review.goods_no], (error, results) => {
-                const filename = results[0].goods_no;
+                                const newDir = path.join(__dirname, '../uploads/uploadReviews/');
 
-                const newImgPath = path.join(newDir, `${filename}${extname}`);
-                
-                fs.renameSync(dir, newImgPath);
+                                if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
 
-                db.query(sql.setReviewImg, [`${filename}${extname}`, filename], (error, results) => {
-                    if (error) {
-                        console.log('이미지 추가 실패');
-                    } else {
-                        return res.status(200).json({
-                            message: 'success'
+                                const extname = path.extname(dir);
+                                const newImgPath = path.join(newDir, `${filename}-${extname}`);
+
+                                fs.renameSync(dir, newImgPath);
+
+                                db.query(sql.review_img_add, [`${filename}-${extname}`, filename], function(error, results, fields) {
+                                    if (error) {
+                                        console.log('이미지 추가 실패!');
+                                    } else {
+                                        return res.status(200).json({ message: "success!" });
+                                    }
+                                });
+                            } catch (err) {
+                                return res.status(200).json({ message: "DB error" });
+                            }
                         });
                     }
-                    });
-                });
-            } catch (error) {
-                db.query(sql.delete_reviews, [review.goods_no], (error, results) => {
-                    return res.status(500).json({
-                        message: "fail"
-                    });
-                });
+                })
             }
-        }
-    });
+        });
+    } catch (err) {
+        return res.status(200).json({ message: "DB error!"});
+    } 
 });
 
-router.post('/getOrderGoods/:goodsno', (req, res, next) => {
-    const order = req.body;
+router.get('/getOrderGoods/:goodsno', (req, res, next) => {
+    const order = req.params.goodsno;
     
     db.query(sql.selectOrderTn, [order.goods_no], function(err, results, fields){
         if(err){
-            return res.status(500).json({ message: '주문정보 불러오기 실패'});
+            return res.status(500).json({ message: '주문상품 불러오기 실패'});
         }else{
             return res.status(200).json(results);
         }
@@ -160,19 +172,21 @@ router.post('/getOrderGoods/:goodsno', (req, res, next) => {
     
 })
 
-// router.post('/getUser/:userno', (req, res) => {
-//     const userno = req.body;
-//     console.log('nonono', userno);
+router.get('/getUser/:user_no', (req, res, next) => {
+    const user_no = req.params.user_no;
+    console.log('nonono', user_no);
     
-//     db.query(sql.findUser, [userno.user_no], function(err, results, fields){
-//         if(err){
-//             return res.status(500).json({ message: '회원정보 불러오기 실패'});
-//         }else{
-//             return res.status(200).json(results[0]); // 배열의 첫번째 결과를 반환
-//         }
-//     })
+    db.query(sql.findUser, [user_no], (err, results) => {
+        if(err){
+            return res.status(500).json({ message: '회원정보 불러오기 실패'});
+        } else if (results.length === 0) {
+            return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+        } else {
+            return res.status(200).json(results);
+        }
+    });
     
-// });
+});
 
 // 리뷰등록 세번째 등록꺼
 // router.post('/addReviews', function (req, res, next) {
@@ -211,20 +225,6 @@ router.post('/getOrderGoods/:goodsno', (req, res, next) => {
 //                 })
 //             }
 //         })
-//     })
-// })
-
-//리뷰 생성..네번째..맨위에 생성한 것
-// router.post("/newReview", (req, res) => {
-//     const newRe = req.body;
-//     console.log('res=====', newRe);
-
-//     db.query(sql.newReview, [newRe.review_con], (err, data) => {
-//         if (err) {
-//             res.status(500).json({ error: 'error' });
-//         } else {
-//             res.json(data);
-//         }
 //     })
 // })
 

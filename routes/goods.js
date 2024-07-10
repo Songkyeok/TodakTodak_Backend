@@ -383,6 +383,19 @@ router.post('/likeCheck', (req, res, next) => {
         }
     })
 })
+
+router.get('/likeCount/:goodsno', function (request, response, next) {
+    const goodsno = request.params.goodsno;
+
+    db.query(sql.like_count, [goodsno], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return response.status(500).json({ error: '에러' });
+        }
+        return response.status(200).json(results[0]['COUNT(*)']);
+    });
+});
+
 router.post('/orderPay', (req, res, next) => {
     const order = req.body;
     const orderDetail = req.body.order_detail;
