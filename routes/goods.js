@@ -321,18 +321,7 @@ router.post('/basketDelete', (req, res, next) => {
         return res.status(200).json({ message: '장바구니 삭제'});
     })
 })
-//장바구니 수량
-router.post('/basketCnt' , (req, res, naxt) => {
-    db.query(sql.basket_cnt , function(err,results){
-        if(err){
-            return res.status(500).json({ err : '장바구니 수량 에러'});
-        }
-        return res.status(200).json({ message: '장바구니 수량 체크 성공',
-        results: results}),
-        console.log(results)
-        
-    })
-})
+
 router.post('/updateBasket', (req, res, next) => {
     const basket = req.body;
     const basketno = req.body.basket_no;
