@@ -25,8 +25,6 @@ const profileRouter = require('./routes/profile');
 const adminRouter = require('./routes/admin');
 const reviewRouter = require('./routes/review');
 const mypageRouter = require('./routes/mypage');
-// const qnaRouter = require('./routes/qna');
-// app.use('/qna', qnaRouter);
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
 app.use('/profile', profileRouter);
