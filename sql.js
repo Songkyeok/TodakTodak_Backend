@@ -150,6 +150,7 @@ module.exports = {
     order_select_goods: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 3 AND goods_no = ? ;`,
     get_review_no: `SELECT review_no FROM tb_review WHERE order_trade_no = ?`,
     review_img_add: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
+    addPoint: `UPDATE tb_user SET user_point = user_point + 500 WHERE user_no = ?`, // 리뷰 작성시 포인트 적립하는 쿼리
 
     //Q&A 등록/조회
 
