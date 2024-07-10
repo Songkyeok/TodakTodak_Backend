@@ -52,7 +52,8 @@ module.exports = {
     order_select: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_delete: `DELETE FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
-
+    order_list: `SELECT o.order_create, od.order_trade_no, o.order_nm, g.goods_nm, o.order_tp, o.order_status FROM tb_order_detail od JOIN tb_order o ON o.order_trade_no = od.order_trade_no JOIN tb_goods g ON od.goods_no = g.goods_no`,
+    order_status_update: `UPDATE tb_order SET order_status = ? WHERE order_trade_no = ?`,
     
     //장바구니
     basket_select: `select tb_goods.goods_cnt, tb_basket.basket_no, tb_basket.goods_no, tb_basket.user_no, tb_basket.basket_img, tb_basket.basket_nm, tb_basket.basket_price, tb_basket.basket_cnt from tb_basket, tb_goods WHERE tb_basket.goods_no = tb_goods.goods_no AND user_no = ?;`,

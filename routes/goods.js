@@ -454,6 +454,29 @@ router.post('/orderPay', (req, res, next) => {
     })
 })
 
+//주문관리 내역
+router.post('/orderList', (req, res) => {
+    db.query(sql.order_list, (error, results) => {
+        if(error){
+            return res.status(500).json({error: 'error'});
+        }
+        res.json(results);
+    })
+})
+
+//배송상태 변경
+router.post('/updatestatus', function (req, res, next) {
+    const status = req.body.status;
+
+    db.query(sql.order_status_update, [status], function (error, results, fields) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({ error: '에러' });
+        }
+        return res.status(200).json({ message: 'complete' });
+    });
+});
+
 router.post('/getOrder', (req, res, next) => {
     const order = req.body;
     console.log(order.order_tp)
