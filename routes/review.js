@@ -116,64 +116,38 @@ router.post('/addReviews', (req, res) => {
     const review = req.body;
     console.log(review);
 
-    try {
-        db.query(sql.findUser, [review.user_no], function(error, results, fields) {
-            if(results.length > 0) {
+              db.query(sql.addReviews, [review.review_con, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], function(error, results, fields) {
+                if(error) {
+                    return res.status(200).json({message: '리뷰 등록 실패!'})
+                }
+                try {
+                    const dir = path.join(__dirname, '../uploads', review.review_img);
 
-                db.query(sql.findGoodsNo, [review.goods_no], function(error, results, fields) {
-                    if(results.length > 0) {
+                    const newDir = path.join(__dirname, '../uploads/uploadReviews/');
 
-                        db.query(sql.addReviews, [review.review_con, review.review_img, review.review_rating, review.user_no, review.goods_no, review.order_trade_no], function(error, results, fields) {
-                            if(error) {
-                                return res.status(200).json({message: '리뷰 등록 실패!'})
-                            }
-                            try {
-                                const dir = path.join(__dirname, '../uploads', review.review_img);
+                        if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
 
-                                const newDir = path.join(__dirname, '../uploads/uploadReviews/');
+                            const extname = path.extname(dir);
+                            const newImgPath = path.join(newDir, `${filename}-${extname}`);
 
-                                if(!fs.existsSync(newDir)){ fs.mkdirSync(newDir); }
+                            fs.renameSync(dir, newImgPath);
 
-                                const extname = path.extname(dir);
-                                const newImgPath = path.join(newDir, `${filename}-${extname}`);
+                            db.query(sql.review_img_add, [`${filename}-${extname}`, filename], function(error, results, fields) {
+                                if (error) {
+                                    console.log('이미지 추가 실패!');
+                                } else {
+                                    return res.status(200).json({ message: "success!" });
+                                }
+                            });
+                        } catch (err) {
+                            return res.status(200).json({ message: "DB error" });
+                        }
+                    });
+                });
 
-                                fs.renameSync(dir, newImgPath);
-
-                                db.query(sql.review_img_add, [`${filename}-${extname}`, filename], function(error, results, fields) {
-                                    if (error) {
-                                        console.log('이미지 추가 실패!');
-                                    } else {
-                                        return res.status(200).json({ message: "success!" });
-                                    }
-                                });
-                            } catch (err) {
-                                return res.status(200).json({ message: "DB error" });
-                            }
-                        });
-                    }
-                })
-            }
-        });
-    } catch (err) {
-        return res.status(200).json({ message: "DB error!"});
-    } 
-});
-
-router.get('/getOrderGoods/:goodsno', (req, res, next) => {
-    const order = req.params.goodsno;
-    
-    db.query(sql.selectOrderTn, [order.goods_no], function(err, results, fields){
-        if(err){
-            return res.status(500).json({ message: '주문상품 불러오기 실패'});
-        }else{
-            return res.status(200).json(results);
-        }
-    })
-    
-})
 
 router.get('/getUser/:user_no', (req, res, next) => {
-    const user_no = req.params.user_no;
+    const user_no = req.params.user_no; // getUser에서 params로 보낸 부분이 있기 때문에 params로 받음 (const response)
     console.log('nonono', user_no);
     
     db.query(sql.findUser, [user_no], (err, results) => {
@@ -187,6 +161,7 @@ router.get('/getUser/:user_no', (req, res, next) => {
     });
     
 });
+
 
 // 리뷰등록 세번째 등록꺼
 // router.post('/addReviews', function (req, res, next) {
