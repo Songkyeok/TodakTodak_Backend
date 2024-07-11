@@ -394,6 +394,7 @@ router.get('/likeCount/:goodsno', function (request, response, next) {
         }
         return response.status(200).json(results[0]['COUNT(*)']);
     });
+    
 });
 
 router.post('/orderPay', (req, res, next) => {
