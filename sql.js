@@ -140,23 +140,21 @@ module.exports = {
 
     // 리뷰 등록
     addReviews: `INSERT INTO tb_review (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, ORDER_TRADE_NO, GOODS_NO) 
-                  VALUES (?, ?, ?, ?, ?, ?)`,
+                  VALUES (?, ?, ?, ?, (select order_trade_no from tb_order where user_no = 12 and order_status = 3), (select goods_no from tb_order_detail where order_trade_no = ?))`,
     selectOrderTn: `SELECT order_trade_no FROM tb_order WHERE user_no = ? AND order_status = 3`,
     setReviewImg: `UPDATE tb_review SET review_img = ? where id = ?`,
     delete_reviews: `DELETE from tb_review where id = ?`,
     findGoodsNo: `SELECT goods_no FROM tb_order_detail WHERE order_trade_no = ?`,
     findUser: `SELECT user_nm FROM tb_user WHERE user_no = ?`,
+
     order_select_goods: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 3 AND goods_no = ? ;`,
     get_review_no: `SELECT review_no FROM tb_review WHERE order_trade_no = ?`,
     review_img_add: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
-    addPoint: `UPDATE tb_user SET user_point = user_point + 500 WHERE user_no = ?`, // 리뷰 작성시 포인트 적립하는 쿼리
 
     //Q&A 등록/조회
-
-    get_Qna: `SELECT u.user_no, u.user_nm, u.user_phone
-               FROM tb_qna q
-               JOIN tb_user u ON q.user_no = u.user_no
-               WHERE q.user_no = '?'`,
+    get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = '?';`,
+    qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
+              VALUES ( ?, ?, ?, ?, ?);`,
 
 
     // 마이페이지
