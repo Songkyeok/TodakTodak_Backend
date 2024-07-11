@@ -138,6 +138,16 @@ module.exports = {
     JOIN tb_user u ON u.user_no = r.user_no
     WHERE r.goods_no = ?`,
 
+    //마이페이지 리뷰 조회 (review_no를 가져와야 삭제할 때 사용할 수 있음. vue에서는 안불러오니까 노출되지는 않음)
+    myreviewList: `SELECT r.review_rating, r.review_img, r.user_no, r.goods_no, r.review_con, r.review_create, u.user_nm, r.review_no 
+    FROM tb_review r
+    JOIN tb_goods g ON g.goods_no = r.goods_no
+    JOIN tb_user u ON u.user_no = r.user_no
+    WHERE u.user_no = ?`,
+
+    // 마이페이지 리뷰 삭제
+    deleteReview: `DELETE FROM tb_review WHERE review_no = ?;`,
+
     // 리뷰 등록
     addReviews: `INSERT INTO tb_review (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, ORDER_TRADE_NO, GOODS_NO) VALUES (?, ?, ?, ?, ?, ?)`,
     selectOrderTn: `SELECT order_trade_no FROM tb_order WHERE user_no = ? AND order_status = 3`,
