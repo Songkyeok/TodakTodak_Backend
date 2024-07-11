@@ -153,11 +153,9 @@ module.exports = {
     review_img_add: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
 
     //Q&A 등록/조회
-
-    get_Qna: `SELECT u.user_no, u.user_nm, u.user_phone
-               FROM tb_qna q
-               JOIN tb_user u ON q.user_no = u.user_no
-               WHERE q.user_no = '?'`,
+    get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = '?';`,
+    qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
+              VALUES ( ?, ?, ?, ?, ?);`,
 
 
     // 마이페이지
