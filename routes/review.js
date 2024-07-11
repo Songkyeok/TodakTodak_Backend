@@ -180,51 +180,31 @@ router.post('/getReGoods', (req, res, next) => {
     const goods_no = req.body;
 })
 
+// 마이페이지 리뷰 조회
+router.get('/myreviewList/:user_no',(req, res) => {
+    const myreview = req.params.user_no;
+    // console.log("mymmmyyyyy", myreview);
 
-// 리뷰등록 세번째 등록꺼
-// router.post('/addReviews', function (req, res, next) {
-//     const review = request.body;
+    db.query(sql.myreviewList, [myreview], (err, results) => {
+        if(err) {
+            console.log('리뷰를 조회할 수 없습니다.');
+            return res.status(500).json({ error: err });
+        }
+        return res.json(results);
+    });
+});
 
-//     // 이미지를 제외한 리뷰 정보 먼저 입력
-//     db.query(sql.review_write, [review.con, review.user_no, review.goods_no, reivew.order_no, review.order_status, reivew.review_rating], function (error, result) {
-//         if (error) {
-//             console.error(error);
-//             return response.status(500).json({ error: 'error' });
-//         }
-
-        // 리뷰 번호 확인
-//         db.query(sql.get_review_no, [review.order_no], function (error, results, fields) {
-//             if (error) {
-//                 console.error(error);
-//                 return response.status(500).json({ error: 'error' });
-//             }
-//         })
-//         const filename = result[0].review_no;
-
-//         const pastDir = `${__dirname}` + `../../uploads/` + review.review_img;
-//         const newDir = `${__dirname}` + `../../uploads/uploadReviews/`;
-
-//         const extension = review.review_img.substring(review.review_img.lastIndexOf('.'))
-
-//         fs.rename(pastDir, newDir + filename + extension, (err) => {
-//             if (error) {
-//                 return express.response.status(500).json();
-//             } else {
-//                 // 리뷰 이미지 삽입
-//                 db.query(sql.review_img_insert, [filename + extension, result[0].review_no], function (error, results, fields) {
-//                     if (error) {
-//                         return response.status(500).json();
-//                     }
-//                 })
-//             }
-//         })
-//     })
-// })
-
-// 리뷰 제거
-
-
-
+// 마이페이지 리뷰 삭제
+router.post('/deleteReview', (req, res) => {
+    // console.log(req.body);
+    db.query(sql.deleteReview, [req.body.review_no], (err, results) => { // [req.body.review_no]로 front에서 보낸 axios의 review_no를 받음
+        if(err) {
+            console.log('리뷰를 삭제할 수 없습니다.');
+            return res.status(500).json({ error: 'error' });
+        }
+        return res.json(results);
+    })
+})
 
 
 module.exports = router;
