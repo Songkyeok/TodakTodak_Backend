@@ -150,7 +150,7 @@ module.exports = {
 
     // 리뷰 등록
     addReviews: `INSERT INTO tb_review (REVIEW_CON, REVIEW_IMG, REVIEW_RATING, USER_NO, ORDER_TRADE_NO, GOODS_NO) VALUES (?, ?, ?, ?, ?, ?)`,
-    selectOrderTn: `SELECT order_trade_no FROM tb_order WHERE user_no = ? AND order_status = 3`,
+    selectOrderTn: `SELECT order_trade_no FROM tb_order WHERE user_no = ? AND order_status = 2`,
     setReviewImg: `UPDATE tb_review SET review_img = ? where id = ?`,
     delete_reviews: `DELETE from tb_review where id = ?`,
     findGoodsNo: `SELECT goods_no FROM tb_order_detail WHERE order_trade_no = ?`,
