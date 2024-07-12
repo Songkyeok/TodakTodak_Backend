@@ -19,6 +19,14 @@ module.exports = {
     qna_select:`select qna_create, goods_nm, qna_title, user_nm, qna_answer_admin, qna_no
                 from tb_qna join tb_user on tb_qna.user_no = tb_user.user_no
                 join tb_goods on tb_qna.goods_no = tb_goods.goods_no;`,
+    //관리자 주문관리
+    admin_orderlist: `SELECT order_trade_no, order_nm, order_status, order_zipcode, order_adr1, order_adr2, order_phone FROM tb_order;`,
+    update_order_status: `UPDATE tb_order SET order_status = ? WHERE order_trade_no = ?;`,
+    admin_order_detail: `SELECT od.goods_no, g.goods_nm, od.order_goods_cnt 
+                        FROM tb_order_detail as od JOIN tb_goods as g on od.goods_no = g.goods_no 
+                        WHERE order_trade_no = ?`,
+    delete_order_detail: `DELETE FROM tb_order_detail WHERE order_trade_no = ?;`,
+    delete_order: `DELETE FROM tb_order WHERE order_trade_no = ?;`,
     //is_qna_answer_admin: ``,
     delete_qna:`DELETE FROM tb_qna WHERE qna_no = ? ;`,
 
