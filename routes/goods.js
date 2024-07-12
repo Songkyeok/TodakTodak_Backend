@@ -25,7 +25,10 @@ const upload = multer({
             cb(null, 'uploads/');
         },
         filename(req, file, cb) {
-            cb(null, file.originalname);
+            const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8'); // 한글 파일명 인코딩
+            const extension = path.extname(originalName);
+            const basename = path.basename(originalName, extension);
+            cb(null, `${basename}${extension}`);
         },
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -33,11 +36,11 @@ const upload = multer({
 
 //이미지 등록
 router.post('/upload_img', upload.single('img'), (request, response) => {
-    setTimeout(() => {
-        return response.status(200).json({
+   
+    return response.status(200).json({
             message: 'success'
         })
-    }, 2000);
+   
 })
 
 //상품등록
