@@ -159,6 +159,7 @@ router.post('/addReviews', (req, res) => {
                     });
                 });
 
+                
 
 router.get('/getUser/:user_no', (req, res, next) => {
     const user_no = req.params.user_no; // getUser에서 params로 보낸 부분이 있기 때문에 params로 받음 (const response)
