@@ -73,7 +73,7 @@ router.post('/kakaoLogin', (req, res) => {
 router.post('/naverlogin', function (request, response) {
     const naverlogin = request.body.naverlogin;
     
-    db.query(sql.naverLogin, [naverlogin.id], function (error, results, fields) {
+    db.query(sql.naverLogin, [naverlogin.id], function (error, results) {
         if (error) {
             console.log(error);
             return response.status(500).json({
@@ -82,12 +82,12 @@ router.post('/naverlogin', function (request, response) {
         }
         if (results.length > 0) {
             // 가입된 계정 존재
-            db.query(sql.getUserNo, [naverlogin.id], function (error, results) {
+            db.query(sql.getUserNo, [naverlogin.id], function (error, result) {
                 if (error) {
                     console.log(error)
                 }
                 return response.status(200).json({
-                    message: results[0].user_no
+                    message: result[0].user_no
                 })
             })
         } else {

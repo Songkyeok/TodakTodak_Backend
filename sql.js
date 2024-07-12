@@ -164,6 +164,14 @@ module.exports = {
     get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = '?';`,
     qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
               VALUES ( ?, ?, ?, ?, ?);`,
+    
+    selectQna: `select goods_nm, qna_title, qna_content, qna_create from tb_qna
+                join tb_goods on tb_qna.goods_no = tb_goods.goods_no
+                where tb_qna.qna_no = ?`,
+    updateQna: `update tb_qna
+                set qna_answer_admin = ?
+                where qna_no = ?`,
+    
 
 
     // 마이페이지

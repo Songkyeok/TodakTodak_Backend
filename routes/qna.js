@@ -39,4 +39,25 @@ router.post('/intoQna' , (req , res ) => {
     })
 })
 
+// qna 작성
+router.get('/selectQna/:qna_no', (req, res) => {
+    db.query(sql.selectQna, [req.params.qna_no], (err, data) => {
+        if(err) {
+            return res.status(500).json({ error: err })
+        }
+
+        return res.status(200).json({ data });
+    })
+})
+
+router.get('/updateQna/:qna_no', (req, res) => {
+    db.query(sql.updateQna, [req.query.qna_answer_admin, req.params.qna_no], (err, data) => {
+        if(err) {
+            return res.status(500).json({ error: err })
+        }
+
+        return res.status(200).json({ data });
+    })
+})
+
 module.exports = router;
