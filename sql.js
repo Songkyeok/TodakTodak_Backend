@@ -16,9 +16,18 @@ module.exports = {
     delete_goods: `DELETE FROM tb_goods WHERE goods_nm = ?`,
     delete_goods_2: `DELETE FROM tb_goods WHERE goods_no = ?`,
 
+    //qna 목록 조회
     qna_select:`select qna_create, goods_nm, qna_title, user_nm, qna_answer_admin, qna_no
                 from tb_qna join tb_user on tb_qna.user_no = tb_user.user_no
                 join tb_goods on tb_qna.goods_no = tb_goods.goods_no;`,
+                
+    selectQna: `select goods_nm, qna_title, qna_content, qna_create from tb_qna
+                join tb_goods on tb_qna.goods_no = tb_goods.goods_no
+                where tb_qna.qna_no = ?`,
+    updateQna: `update tb_qna
+                set qna_answer_admin = ?
+                where qna_no = ?`,
+
     //관리자 주문관리
     admin_orderlist: `SELECT order_trade_no, order_nm, order_status, order_zipcode, order_adr1, order_adr2, order_phone FROM tb_order;`,
     update_order_status: `UPDATE tb_order SET order_status = ? WHERE order_trade_no = ?;`,
@@ -172,15 +181,11 @@ module.exports = {
     get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = '?';`,
     qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
               VALUES ( ?, ?, ?, ?, ?);`,
-    
-    selectQna: `select goods_nm, qna_title, qna_content, qna_create from tb_qna
-                join tb_goods on tb_qna.goods_no = tb_goods.goods_no
-                where tb_qna.qna_no = ?`,
-    updateQna: `update tb_qna
-                set qna_answer_admin = ?
-                where qna_no = ?`,
-    
-
+    detail_qna_select:`select goods_no, qna_no, qna_title, user_nm, qna_create, qna_answer_admin, qna_secret
+                        from tb_qna
+                        join tb_user on tb_qna.user_no = tb_user.user_no
+                        where tb_qna.goods_no = ?
+                        order by tb_qna.qna_no desc;`,
 
     // 마이페이지
     getInfo: `select user_nm, user_point, user_grade

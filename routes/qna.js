@@ -8,6 +8,7 @@ const path = require('path');
 const multer = require('multer');
 
 
+//회원 상품 (user 조회)
 router.post('/selectQnaUser', (req, res) => {
     
     db.query(sql.get_qna, [req.body.user_no], (error, results) => {
@@ -23,10 +24,9 @@ router.post('/selectQnaUser', (req, res) => {
         }
     })
 })
-
+//회원 상품 Qna 작성
 router.post('/intoQna' , (req , res ) => {
     const qna = req.body;
-    console.log(req.body)
     db.query(sql.qna_into, [qna.user_no, qna.qna_title, qna.qna_content, qna.qna_secret, qna.goods_no] , function(err , result) {
         if(err){
             return res.status(500).json({ error : err });
@@ -38,8 +38,18 @@ router.post('/intoQna' , (req , res ) => {
         }
     })
 })
+//detail 페이지 qna 리스트 조회
+router.get('/detailQnaSelect/:goods_no' , (req , res ) => {
+    const data = req.params.goods_no;
+    db.query(sql.detail_qna_select, [data] , (err, data) => {
+        if(err) {
+            return res.status(500).json({ error : err })
+        }
+        return res.status(200).json({ data });
+    })
+})
 
-// qna 작성
+// admin qna 답글 조회
 router.get('/selectQna/:qna_no', (req, res) => {
     db.query(sql.selectQna, [req.params.qna_no], (err, data) => {
         if(err) {
@@ -49,7 +59,7 @@ router.get('/selectQna/:qna_no', (req, res) => {
         return res.status(200).json({ data });
     })
 })
-
+// admin qna 답글 작성
 router.get('/updateQna/:qna_no', (req, res) => {
     db.query(sql.updateQna, [req.query.qna_answer_admin, req.params.qna_no], (err, data) => {
         if(err) {
