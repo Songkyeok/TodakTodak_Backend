@@ -150,11 +150,16 @@ module.exports = {
     review_img_add: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
     addPoint: `UPDATE tb_user SET user_point = user_point + 500 WHERE user_no = ?`, // 리뷰 작성시 포인트 적립하는 쿼리
 
-    //Q&A 등록/조회
+    //Q&A 등록/조회 (작성하기)
     get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = '?';`,
     qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
               VALUES ( ?, ?, ?, ?, ?);`,
-
+    //Q&A 전체 조회 (주문상세)
+    qna_list: `SELECT q.qna_no, q.qna_title, u.user_nm, q.qna_create, q.goods_no
+    FROM tb_qna q
+    JOIN tb_goods g ON g.goods_no = q.goods_no
+    JOIN tb_user u ON u.user_no = q.user_no
+    WHERE q.goods_no = '?';`,
 
     // 마이페이지
     getInfo: `select user_nm, user_point, user_grade
