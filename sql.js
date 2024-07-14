@@ -190,5 +190,16 @@ module.exports = {
                FROM tb_like l
                JOIN tb_goods g ON l.goods_no = g.goods_no
                WHERE l.user_no = ?`,
+
+    selectCheck: `SELECT tb_order_detail.order_detail_no, tb_goods.goods_nm, (tb_order_detail.order_goods_cnt * tb_goods.goods_price) as ordered_price, tb_order_detail.order_goods_cnt, tb_order.order_create, tb_order.order_status, tb_goods.goods_no, tb_order.order_trade_no
+                  FROM tb_order_detail
+                  JOIN tb_goods ON tb_order_detail.goods_no = tb_goods.goods_no
+                  JOIN tb_order ON tb_order_detail.order_trade_no = tb_order.order_trade_no
+                  WHERE tb_order.user_no = ?
+                  ORDER BY order_detail_no DESC`,
+    orderCancel: `UPDATE tb_order
+                  JOIN tb_order_detail ON tb_order.order_trade_no = tb_order_detail.order_trade_no
+                  SET tb_order.order_status = 3
+                  WHERE tb_order_detail.order_detail_no = ?`,
 };
 
