@@ -180,8 +180,8 @@ module.exports = {
 
     //Q&A 등록/조회
     get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = ?`,
-    qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
-              VALUES ( ?, ?, ?, ?, ?);`,
+    qna_into:`INSERT INTO tb_qna (goods_no, qna_title, qna_content, qna_secret, user_no)
+              VALUES (?, ?, ?, ?, ?);`,
     detail_qna_select:`select goods_no, qna_no, qna_title, user_nm, qna_create, qna_answer_admin, qna_secret
                         from tb_qna
                         join tb_user on tb_qna.user_no = tb_user.user_no
