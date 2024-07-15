@@ -241,7 +241,8 @@ router.get('/newGoodsList', (req, res) => {
 })
 // 인기상품 리스트
 router.get('/bestGoodsList', (req, res) => {
-    db.query(sql.newGoodsList, (error, results) => {
+
+    db.query(sql.bestGoodsList, (error, results) => {
         if(error){
             return res.status(500).json({error: 'error'});
         }
