@@ -178,7 +178,7 @@ module.exports = {
     addPoint: `UPDATE tb_user SET user_point = user_point + 500 WHERE user_no = ?`, // 리뷰 작성시 포인트 적립하는 쿼리
 
     //Q&A 등록/조회
-    get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = '?';`,
+    get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = ?`,
     qna_into:`INSERT INTO tb_qna (user_no, qna_title, qna_content, qna_secret, goods_no)
               VALUES ( ?, ?, ?, ?, ?);`,
     detail_qna_select:`select goods_no, qna_no, qna_title, user_nm, qna_create, qna_answer_admin, qna_secret
