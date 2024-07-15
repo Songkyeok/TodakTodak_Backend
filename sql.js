@@ -238,5 +238,13 @@ module.exports = {
                   JOIN tb_order_detail ON tb_order.order_trade_no = tb_order_detail.order_trade_no
                   SET tb_order.order_status = 3
                   WHERE tb_order_detail.order_detail_no = ?`,
+
+    // analytics
+    salesRate: `select tb_goods.goods_nm, SUM(tb_order.order_tc) as order_tc
+                from tb_order_detail
+                join tb_goods on tb_goods.goods_no = tb_order_detail.goods_no
+                join tb_order on tb_order.order_trade_no = tb_order_detail.order_trade_no
+                group by tb_goods.goods_nm
+                order by order_tc desc;`,
 };
 
