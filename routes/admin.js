@@ -107,4 +107,15 @@ router.post('/deleteOrder', (req, res, next) => {
     
 })
 
+router.get('/salesRate', (req, res) => {
+    db.query(sql.salesRate, (err, data) => {
+        if(err) {
+            return res.status(500).json({ error : err })
+        }
+        
+        return res.status(200).json({ data })
+    })
+
+})
+
 module.exports = router;

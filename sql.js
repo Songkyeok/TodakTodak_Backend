@@ -33,7 +33,7 @@ module.exports = {
                 where qna_no = ?`,
 
     // 마이페이지 qna 조회 및 삭제
-    myqnaList: `SELECT q.qna_title, q.user_no, q.goods_no, q.qna_content, q.qna_create, q.qna_no, g.goods_nm, q.qna_secret
+    myqnaList: `SELECT q.qna_title, q.user_no, q.goods_no, q.qna_content, q.qna_create, q.qna_no, g.goods_nm, q.qna_secret, q.qna_answer_admin
     FROM tb_qna q
     JOIN tb_goods g ON g.goods_no = q.goods_no
     JOIN tb_user u ON u.user_no = q.user_no
@@ -108,8 +108,19 @@ module.exports = {
                WHERE l.user_no = ?`,
 
     // 메인 페이지
-    bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7) limit 4;`,
-    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7) limit 4;`,
+    bestGoodsList: `SELECT g.*, t.total_orders
+                    FROM TB_GOODS g
+                    INNER JOIN (
+                      SELECT od.GOODS_NO, SUM(od.ORDER_GOODS_CNT) AS total_orders
+                      FROM TB_ORDER_DETAIL od
+                      INNER JOIN TB_GOODS g ON od.GOODS_NO = g.GOODS_NO
+                      WHERE g.GOODS_CATEGORY IN (1, 2, 3, 4) 
+                      GROUP BY od.GOODS_NO
+                    ) AS t ON g.GOODS_NO = t.GOODS_NO
+                    WHERE GOODS_CATEGORY not in (7)
+                    ORDER BY t.total_orders DESC
+                    LIMIT 4;`,
+    newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7) ORDER BY goods_no DESC limit 4;`,
 
 
     // 로컬 회원가입
@@ -228,6 +239,17 @@ module.exports = {
                   JOIN tb_order_detail ON tb_order.order_trade_no = tb_order_detail.order_trade_no
                   SET tb_order.order_status = 3
                   WHERE tb_order_detail.order_detail_no = ?`,
+
     backPoint: `UPDATE tb_user SET user_point = user_point + ? WHERE user_no = ?;`,
+
+
+    // analytics
+    salesRate: `select tb_goods.goods_nm, SUM(tb_order.order_tc) as order_tc
+                from tb_order_detail
+                join tb_goods on tb_goods.goods_no = tb_order_detail.goods_no
+                join tb_order on tb_order.order_trade_no = tb_order_detail.order_trade_no
+                group by tb_goods.goods_nm
+                order by order_tc desc;`,
+
 };
 
