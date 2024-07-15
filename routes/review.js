@@ -46,7 +46,10 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename(req, file, cb) {
-        cb(null, file.originalname);
+        const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8'); // 한글 파일명 인코딩
+        const extension = path.extname(originalName);
+        const basename = path.basename(originalName, extension);
+        cb(null, `${basename}${extension}`);
     },
 });
 
@@ -57,12 +60,10 @@ const upload = multer({
 
 // 리뷰 이미지 등록
 router.post('/upload_img', upload.single('img'), (req, res) => {
-    setTimeout(() => {
-        return res.status(200).json({
+    return res.status(200).json({
             message: 'success'
         })
-    }, 1000);
-})
+});
   
 // 리뷰 등록 시도 1
 // router.post('/addReviews', (req, res) => {
