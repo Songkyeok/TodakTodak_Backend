@@ -2,9 +2,13 @@ module.exports = {
     // auth
     getUserNo: `SELECT user_no, user_del, user_tp FROM tb_user WHERE user_id = ?`,
 
-    // 카카오
+    // kakao
     kakaoLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
     kakaoJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
+
+    // naver
+    naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
+    naverJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
 
     // admin 기능
     admin_check: `SELECT user_tp FROM tb_user WHERE user_no = ?;`,
@@ -92,12 +96,7 @@ module.exports = {
                FROM tb_like l
                JOIN tb_goods g ON l.goods_no = g.goods_no
                WHERE l.user_no = ?`,
-    
-    // 네이버
-    naverLogin: `SELECT * FROM tb_user WHERE user_id = ?`,
-    naverJoin: `INSERT INTO tb_user (user_id, user_nm, user_email) VALUES(?,?,?)`,
 
-    
     // 메인 페이지
     bestGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7) limit 4;`,
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7) limit 4;`,

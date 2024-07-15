@@ -44,63 +44,55 @@ router.post('/login', (req, res) => {
 router.post('/kakaoLogin', (req, res) => {
     const kakao = req.body;
 
-    // 데이터 없을 시 회원가입 진행
-    db.query(sql.kakaoLogin, [kakao.user_id], (err, results) => {
-        if(results.length <= 0) {
-            db.query(sql.kakaoJoin, [kakao.user_id, kakao.user_nm, kakao.user_id], err => {
-                if(err) {
-                    console.error(err);
-                    res.status(500).json({
-                        error: 'error'
-                    })
-                }
-            })
+    db.query(sql.kakaoLogin, [kakao.user_id], (err, data) => {
+        if(err) {
+            return res.status(500).json({ error: err });
         }
 
-        // 로그인
-        db.query(sql.getUserNo, [kakao.user_id], (err, results) => {
-            if (err) {
-                console.error(err);
-            }
-            res.status(200).json({
-                message: results[0].user_no
+        if(data.length > 0) {
+            return res.status(200).json({
+                message: '로그인',
+                data: data
+            });
+        } else {
+            db.query(sql.kakaoJoin, [kakao.user_id, kakao.user_nm, kakao.user_email], (err, data) => {
+                if(err) {
+                    return res.status(500).json({ error: err });
+                }
+                
+                return res.status(200).json({
+                    message: '회원가입'
+                });
             })
-        })
+        }
+        
     })
 });
 
 // 네이버 로그인
-router.post('/naverlogin', function (request, response) {
-    const naverlogin = request.body.naverlogin;
+router.post('/naverlogin', (req, res) => {
+    const naver = req.body;
+    console.log("naver", naver);
     
-    db.query(sql.naverLogin, [naverlogin.id], function (error, results) {
-        if (error) {
-            console.log(error);
-            return response.status(500).json({
-                message: 'DB_error'
-            });
+    db.query(sql.naverLogin, [naver.user_id], (err, data) => {
+        if(err) {
+            return res.status(500).json({ error: err });
         }
-        if (results.length > 0) {
-            // 가입된 계정 존재
-            db.query(sql.getUserNo, [naverlogin.id], function (error, result) {
-                if (error) {
-                    console.log(error)
-                }
-                return response.status(200).json({
-                    message: result[0].user_no
-                })
-            })
+
+        if(data.length > 0) {
+            return res.status(200).json({
+                message: '로그인',
+                data: data
+            });
         } else {
-            // DB에 계정 정보 입력
-            db.query(sql.naverJoin, [naverlogin.id, naverlogin.name, naverlogin.email], function (error, result) {
-                if (error) {
-                    console.error(error);
-                    return response.status(500).json({ error: 'error' });
-                } else {
-                    return response.status(200).json({
-                        message: '저장완료'
-                    })
+            db.query(sql.naverJoin, [naver.user_id, naver.user_nm, naver.user_email], (err, data) => {
+                if(err) {
+                    return res.status(500).json({ error: err });
                 }
+                
+                return res.status(200).json({
+                    message: '회원가입'
+                });
             })
         }
     })
