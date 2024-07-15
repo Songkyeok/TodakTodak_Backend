@@ -33,7 +33,7 @@ module.exports = {
                 where qna_no = ?`,
 
     // 마이페이지 qna 조회 및 삭제
-    myqnaList: `SELECT q.qna_title, q.user_no, q.goods_no, q.qna_content, q.qna_create, q.qna_no, g.goods_nm, q.qna_secret
+    myqnaList: `SELECT q.qna_title, q.user_no, q.goods_no, q.qna_content, q.qna_create, q.qna_no, g.goods_nm, q.qna_secret, q.qna_answer_admin
     FROM tb_qna q
     JOIN tb_goods g ON g.goods_no = q.goods_no
     JOIN tb_user u ON u.user_no = q.user_no
