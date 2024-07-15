@@ -37,9 +37,13 @@ router.post('/orderCancel', (req, res) => {
         if(err) {
             return res.status(500).json({ error: err });
         }
-        return res.status(200).json({
-            message: 'success'
-        });
+        db.query(sql.backPoint, [req.body.order_point, req.body.user_no], (err, data) => {
+            if(err){
+                return res.status(500).json({ error: err });
+            }else{
+                return res.status(200).json({ message : 'success'});
+            }
+        })
     })
 })
 
