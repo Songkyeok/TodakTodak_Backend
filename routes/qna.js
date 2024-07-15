@@ -27,7 +27,7 @@ router.post('/selectQnaUser', (req, res) => {
 //회원 상품 Qna 작성
 router.post('/intoQna' , (req , res ) => {
     const qna = req.body;
-    db.query(sql.qna_into, [qna.user_no, qna.qna_title, qna.qna_content, qna.qna_secret, qna.goods_no] , function(err , result) {
+    db.query(sql.qna_into, [qna.goods_no, qna.qna_title, qna.qna_content, qna.qna_secret, qna.user_no] , function(err , result) {
         if(err){
             return res.status(500).json({ error : err });
         }else{
