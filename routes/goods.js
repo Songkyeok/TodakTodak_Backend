@@ -274,10 +274,6 @@ router.get('/eventList/:event', (req, res) => {
     })
 })
 
-// 장바구니 리스트
-router.get('/basket', (req, res) => {
-    console.log('req===', req);
-})
 
 //장바구니 담기
 router.post('/basketInsert', (req, res, next) => {
@@ -405,10 +401,10 @@ router.post('/orderPay', (req, res, next) => {
     const order = req.body;
     const ordertp = req.body.ordertp;
     const orderDetail = req.body.order_detail;
-    console.log(order.user_no)
-    console.log(ordertp)
+
+  
         
-    db.query(sql.order_insert, [order.order_nm, order.order_adr1, order.order_adr2, order.order_zipcode, order.order_phone, order.order_memo, order.order_tc, order.order_tp, order.user_no], function(err, results, fields){
+    db.query(sql.order_insert, [order.order_nm, order.order_adr1, order.order_adr2, order.order_zipcode, order.order_phone, order.order_memo, order.order_point, order.order_tc, order.order_tp, order.user_no], function(err, results, fields){
         if(err){
             return res.status(500).json({ message : '주문 실패'})
         }
@@ -464,12 +460,22 @@ router.post('/orderPay', (req, res, next) => {
                         if(ordertp === '1'){
                             db.query(sql.delete_basket_order, [order.user_no, orderDetail.goods_no], function(err, results, fields) {
                                 if(err){
-                                    return reject(err);
+                                    return res.status(500).json({err})
                                 }
-                                resolve();
+                                return res.status(200).json();
                             })
                         }
                     })
+                }
+            })
+        }
+        //포인트 사용
+        if(order.order_point != 0){
+            db.query(sql.usePoint, [order.order_point, order.user_no], function(err, results, fields) {
+                if(err){
+                    return res.status(500).json({err});
+                }else{
+                    return res.status(200).json();
                 }
             })
         }

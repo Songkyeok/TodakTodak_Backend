@@ -76,8 +76,8 @@ module.exports = {
 
     //주문하기
     order_insert: `INSERT INTO tb_order
-                (order_nm, order_adr1, order_adr2, order_zipcode, order_phone, order_memo, order_tc, order_tp, user_no)
-                VALUES(?,?,?,?,?,?,?,?,?);`,
+                (order_nm, order_adr1, order_adr2, order_zipcode, order_phone, order_memo, order_point, order_tc, order_tp, user_no)
+                VALUES(?,?,?,?,?,?,?,?,?,?);`,
     order_detail_insert: `INSERT INTO tb_order_detail(order_trade_no, goods_no, order_goods_cnt) VALUES(?,?,?);`,
     order_goods_cnt: `UPDATE tb_goods SET goods_cnt = goods_cnt - ? WHERE goods_no = ?;`,
     order_select: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 0;`,
@@ -85,7 +85,7 @@ module.exports = {
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     select_order_basket: `SELECT basket_no, goods_no, basket_img, basket_nm, basket_price, basket_cnt FROM tb_basket WHERE goods_no = ? AND user_no = ?;`,
     delete_basket_order: `DELETE FROM tb_basket WHERE user_no = ? AND goods_no = ?;`,
-
+    usePoint: `UPDATE tb_user SET user_point = user_point - ? WHERE user_no = ?;`,
     
     //장바구니
     basket_select: `select tb_goods.goods_cnt, tb_basket.basket_no, tb_basket.goods_no, tb_basket.user_no, tb_basket.basket_img, tb_basket.basket_nm, tb_basket.basket_price, tb_basket.basket_cnt from tb_basket, tb_goods WHERE tb_basket.goods_no = tb_goods.goods_no AND user_no = ?;`,
@@ -222,6 +222,7 @@ module.exports = {
                         tb_goods.goods_nm,
                         (tb_order_detail.order_goods_cnt * tb_goods.goods_price) as ordered_price,
                         tb_order_detail.order_goods_cnt,
+                        tb_order.order_point,
                         tb_order.order_create,
                         tb_order.order_status,
                         tb_goods.goods_no,
@@ -239,6 +240,9 @@ module.exports = {
                   SET tb_order.order_status = 3
                   WHERE tb_order_detail.order_detail_no = ?`,
 
+    backPoint: `UPDATE tb_user SET user_point = user_point + ? WHERE user_no = ?;`,
+
+
     // analytics
     salesRate: `select tb_goods.goods_nm, SUM(tb_order.order_tc) as order_tc
                 from tb_order_detail
@@ -246,5 +250,6 @@ module.exports = {
                 join tb_order on tb_order.order_trade_no = tb_order_detail.order_trade_no
                 group by tb_goods.goods_nm
                 order by order_tc desc;`,
+
 };
 
