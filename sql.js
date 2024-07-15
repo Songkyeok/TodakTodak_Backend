@@ -28,6 +28,16 @@ module.exports = {
                 set qna_answer_admin = ?
                 where qna_no = ?`,
 
+    // 마이페이지 qna 조회 및 삭제
+    myqnaList: `SELECT q.qna_title, q.user_no, q.goods_no, q.qna_content, q.qna_create, q.qna_no, g.goods_nm, q.qna_secret
+    FROM tb_qna q
+    JOIN tb_goods g ON g.goods_no = q.goods_no
+    JOIN tb_user u ON u.user_no = q.user_no
+    WHERE u.user_no = ?`,
+
+    deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?;`,
+    
+
     //관리자 주문관리
     admin_orderlist: `SELECT order_trade_no, order_nm, order_status, order_zipcode, order_adr1, order_adr2, order_phone FROM tb_order;`,
     update_order_status: `UPDATE tb_order SET order_status = ? WHERE order_trade_no = ?;`,
