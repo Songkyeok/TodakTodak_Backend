@@ -402,7 +402,10 @@ router.get('/likeCount/:goodsno', function (request, response, next) {
 
 router.post('/orderPay', (req, res, next) => {
     const order = req.body;
+    const ordertp = req.body.ordertp;
     const orderDetail = req.body.order_detail;
+    console.log(order.user_no)
+    console.log(ordertp)
         
     db.query(sql.order_insert, [order.order_nm, order.order_adr1, order.order_adr2, order.order_zipcode, order.order_phone, order.order_memo, order.order_tc, order.order_tp, order.user_no], function(err, results, fields){
         if(err){
@@ -432,7 +435,14 @@ router.post('/orderPay', (req, res, next) => {
                                     console.log('재고량 수정 실패');
                                     return reject(err);
                                 }
-                                resolve();
+                                if(ordertp === '1'){
+                                    db.query(sql.delete_basket_order, [order.user_no, detail.goods_no], function(err, results, fields) {
+                                        if(err){
+                                            return reject(err);
+                                        }
+                                        resolve();
+                                    })
+                                }
                             })
                         })
                     })
@@ -450,12 +460,48 @@ router.post('/orderPay', (req, res, next) => {
                         if(err){
                             return res.status(500).json({ message: '상품 재고량 수정 실패'});
                         }
-                        return res.status(200).json({ message: '완료'});
+                        if(ordertp === '1'){
+                            db.query(sql.delete_basket_order, [order.user_no, orderDetail.goods_no], function(err, results, fields) {
+                                if(err){
+                                    return reject(err);
+                                }
+                                resolve();
+                            })
+                        }
                     })
                 }
             })
         }
     })
+})
+
+router.post('/orderpayBasket', (req, res, next) => {
+    const user_no = req.body.user_no;
+    const goodsno = req.body.goods_no;
+
+    
+    if(Array.isArray(goodsno)){
+        const basket = goodsno.map((goods_no) => {
+            return new Promise((resolve, reject) => {
+                db.query(sql.select_order_basket, [goods_no, user_no], function(err, results, fields) {
+                    if(err){
+                        reject(err);
+                    }else{
+                        resolve(results);
+                    }
+                })
+            })
+        })
+        Promise.all(basket)
+            .then((results) => {
+                const combined = results.flat();
+                return res.status(200).json(combined);
+            })
+            .catch((err) => {
+                return res.status(500).json({err});
+            })
+    }
+
 })
 
 router.post('/getOrder', (req, res, next) => {

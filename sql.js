@@ -69,6 +69,8 @@ module.exports = {
     order_select: `SELECT * FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_delete: `DELETE FROM tb_order WHERE user_no = ? AND order_status = 0;`,
     order_check: `SELECT user_no FROM tb_order WHERE user_no = ? AND order_status = 0;`,
+    select_order_basket: `SELECT basket_no, goods_no, basket_img, basket_nm, basket_price, basket_cnt FROM tb_basket WHERE goods_no = ? AND user_no = ?;`,
+    delete_basket_order: `DELETE FROM tb_basket WHERE user_no = ? AND goods_no = ?;`,
 
     
     //장바구니
