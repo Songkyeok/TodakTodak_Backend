@@ -70,4 +70,28 @@ router.get('/updateQna/:qna_no', (req, res) => {
     })
 })
 
+// 마이페이지 qna 조회
+router.get('/myqnaList/:user_no', (req, res) => {
+    const myqna = req.params.user_no;
+
+    db.query(sql.myqnaList, [myqna], (err, results) => {
+        if(err) {
+            console.log('QnA를 조회할 수 없습니다.');
+            return res.status(500).json({error: err});
+        }
+        return res.json(results);
+    })
+})
+
+// 마이페이지 qna 삭제
+router.post('/deleteQna', (req, res) => {
+    db.query(sql.deleteQna, [req.body.qna_no], (err, results) => {
+        if (err) {
+            console.log('QnA를 삭제할 수 없습니다.');
+            return res.status(500).json({error: 'error'});
+        }
+        return res.json(results);
+    })
+})
+
 module.exports = router;
