@@ -54,6 +54,19 @@ router.post('/qnaDelete' , (req, res) => {
         });
     })
 })
+//관리자 Q&A 관리자 답글 삭제
+router.post('/qnaAnswerDelete' , (req,res) => {
+        console.log(req.body.qna_no)
+    db.query(sql.up_delete, [req.body.qna_no], function(err, results){
+        if(err){
+            return res.status(500).json({ error: 'QnA 답글 삭제 에러 '});
+        }
+        return res.status(200).json({
+            message : 'QnA 답글 삭제 성공',
+            results: results
+        });
+    })
+})
 
 router.post('/orderList', (req, res) => {
     db.query(sql.admin_orderlist, function(err, results, fields){
