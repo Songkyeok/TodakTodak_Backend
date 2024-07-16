@@ -178,6 +178,13 @@ module.exports = {
     JOIN tb_user u ON u.user_no = r.user_no
     WHERE r.goods_no = ?`,
 
+    //마이페이지 진행 중인 주문
+    orderCount: `SELECT status, COUNT(o.order_status) AS status_count FROM (
+    SELECT 0 AS status UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS s
+    LEFT JOIN tb_order o ON o.order_status = s.status AND o.user_no = 2
+    GROUP BY status
+    ORDER BY status;`,
+
     //마이페이지 리뷰 조회 (review_no를 가져와야 삭제할 때 사용할 수 있음. vue에서는 안불러오니까 노출되지는 않음)
     myreviewList: `SELECT r.review_rating, r.review_img, r.user_no, r.goods_no, r.review_con, r.review_create, u.user_nm, r.review_no, g.goods_nm 
     FROM tb_review r
