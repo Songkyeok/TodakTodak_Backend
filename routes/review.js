@@ -125,7 +125,7 @@ router.post('/addReviews', (req, res) => {
                     this.review_no = results.insertId;
                     console.log(this.review_no);
                     // 포인트 적립 쿼리
-                    db.query(sql.addPoint, [review.user_no, 500], (error, results, fields) => {
+                    db.query(sql.addPoint, [review.user_no], (error, results, fields) => {
                         if (error) {
                             console.log('포인트 적립 실패');
                             return res.status(200).json({ message: "포인트 적립 실패" });
@@ -191,19 +191,29 @@ router.get('/myreviewList/:user_no',(req, res) => {
         if(err) {
             console.log('리뷰를 조회할 수 없습니다.');
             return res.status(500).json({ error: err });
-        }
+        } 
         return res.json(results);
     });
 });
 
 // 마이페이지 리뷰 삭제
 router.post('/deleteReview', (req, res) => {
-    // console.log(req.body);
+    console.log(req.body);
     db.query(sql.deleteReview, [req.body.review_no], (err, results) => { // [req.body.review_no]로 front에서 보낸 axios의 review_no를 받음
         if(err) {
             console.log('리뷰를 삭제할 수 없습니다.');
             return res.status(500).json({ error: 'error' });
-        }
+        } else {
+            this.review_no = results.insertId;
+                    console.log(this.review_no);
+                    db.query(sql.deletePoint, [req.body.user_no], (error, results, fields) => {
+                        if (error) {
+                            console.log('포인트 차감 실패');
+                            return res.status(200).json({ message: "포인트 차감 실패" });
+                        }
+                    })
+                }
+
         return res.json(results);
     })
 })
