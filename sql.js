@@ -206,7 +206,7 @@ module.exports = {
     get_review_no: `SELECT review_no FROM tb_review WHERE order_trade_no = ?`,
     review_img_add: `UPDATE tb_review SET review_img = ? WHERE review_no = ?`,
     addPoint: `UPDATE tb_user SET user_point = user_point + 500 WHERE user_no = ?`, // 리뷰 작성시 포인트 적립하는 쿼리
-    deletePoint: `UPDATE tb_user SET user_point = user_point - 500 WHERE user_no = ?`, // 리뷰 삭제시 포인트 삭제하는 쿼리
+    deletePoint: `UPDATE tb_user SET user_point = GREATEST(user_point - 500, 0) WHERE user_no = ?`, // 리뷰 삭제시 포인트 삭제하는 쿼리
 
     //Q&A 등록/조회
     get_qna: `SELECT USER_NO, USER_NM, USER_PHONE FROM TB_USER WHERE user_no = ?`,
