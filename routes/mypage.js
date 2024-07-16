@@ -21,6 +21,17 @@ router.post('/likeCount', (req, res) => {
     })
 })
 
+router.post('/orderCount', (req, res) => {
+    console.log(req.body.user_no)
+    db.query(sql.orderCount, [req.body.user_no], (err, data) => {
+        if(err){
+            return res.status(500).json({error : err});
+        }
+        console.log(data)
+        return res.status(200).json(data);
+    })
+})
+
 // 주문 내역 조회
 router.post('/selectCheck', (req, res) => {
     db.query(sql.selectCheck, [req.body.user_no], (err, data) => {
