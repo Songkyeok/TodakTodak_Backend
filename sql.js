@@ -181,7 +181,7 @@ module.exports = {
     //마이페이지 진행 중인 주문
     orderCount: `SELECT status, COUNT(o.order_status) AS status_count FROM (
     SELECT 0 AS status UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS s
-    LEFT JOIN tb_order o ON o.order_status = s.status AND o.user_no = 2
+    LEFT JOIN tb_order o ON o.order_status = s.status AND o.user_no = ?
     GROUP BY status
     ORDER BY status;`,
 
