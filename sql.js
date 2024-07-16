@@ -31,6 +31,7 @@ module.exports = {
     updateQna: `update tb_qna
                 set qna_answer_admin = ?
                 where qna_no = ?`,
+    up_delete: `update tb_qna set qna_answer_admin = '미답변' where qna_answer_admin = ?;`,
 
     // 마이페이지 qna 조회 및 삭제
     myqnaList: `SELECT q.qna_title, q.user_no, q.goods_no, q.qna_content, q.qna_create, q.qna_no, g.goods_nm, q.qna_secret, q.qna_answer_admin
