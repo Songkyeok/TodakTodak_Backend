@@ -46,7 +46,7 @@ router.post('/upload_img', upload.single('img'), (request, response) => {
 //상품등록
 router.post('/addGoods', function (req, res) {
     const goods = req.body;
-    console.log(goods);
+    // console.log(goods);
     try{
 
         db.query(sql.goods_check, [goods.goods_nm], function(error, results, fields){
