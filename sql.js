@@ -38,7 +38,8 @@ module.exports = {
     FROM tb_qna q
     JOIN tb_goods g ON g.goods_no = q.goods_no
     JOIN tb_user u ON u.user_no = q.user_no
-    WHERE u.user_no = ?`,
+    WHERE u.user_no = ?
+    order by q.qna_no desc`,
 
     deleteQna: `DELETE FROM tb_qna WHERE qna_no = ?;`,
     
