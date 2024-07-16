@@ -108,18 +108,17 @@ module.exports = {
                WHERE l.user_no = ?`,
 
     // 메인 페이지
-    bestGoodsList: `SELECT g.*, t.total_orders
+    bestGoodsList: `SELECT g.*, COALESCE(t.total_orders, 0) AS total_orders
                     FROM TB_GOODS g
-                    INNER JOIN (
+                    LEFT JOIN (
                       SELECT od.GOODS_NO, SUM(od.ORDER_GOODS_CNT) AS total_orders
                       FROM TB_ORDER_DETAIL od
-                      INNER JOIN TB_GOODS g ON od.GOODS_NO = g.GOODS_NO
-                      WHERE g.GOODS_CATEGORY IN (1, 2, 3, 4) 
+                      WHERE od.GOODS_NO IN (SELECT GOODS_NO FROM TB_GOODS WHERE GOODS_CATEGORY IN (1, 2, 3, 4, 5, 6))
                       GROUP BY od.GOODS_NO
                     ) AS t ON g.GOODS_NO = t.GOODS_NO
-                    WHERE GOODS_CATEGORY not in (7)
+                    WHERE g.GOODS_CATEGORY NOT IN (7)
                     ORDER BY t.total_orders DESC
-                    LIMIT 4;`,
+                    LIMIT 4;;`,
     newGoodsList: `SELECT goods_no, goods_img, goods_nm, goods_price FROM tb_goods where goods_category not in (7) ORDER BY goods_no DESC limit 4;`,
 
 
