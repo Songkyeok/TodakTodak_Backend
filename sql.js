@@ -23,7 +23,8 @@ module.exports = {
     //qna 목록 조회
     qna_select:`select qna_create, goods_nm, qna_title, user_nm, qna_answer_admin, qna_no
                 from tb_qna join tb_user on tb_qna.user_no = tb_user.user_no
-                join tb_goods on tb_qna.goods_no = tb_goods.goods_no;`,
+                join tb_goods on tb_qna.goods_no = tb_goods.goods_no
+                order by tb_qna.qna_no desc;`,
                 
     selectQna: `select goods_nm, qna_title, qna_content, qna_create from tb_qna
                 join tb_goods on tb_qna.goods_no = tb_goods.goods_no
